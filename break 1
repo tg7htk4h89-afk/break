@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KIB | Call Center Break Portal</title>
+    <style>
+        /* --- KIB Corporate Theme & Reset --- */
+        :root {
+            --kib-navy: #003366;
+            --kib-gold: #C5A059;
+            --kib-gold-hover: #b38f4d;
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #6c757d;
+            --success: #198754;
+            --danger: #dc3545;
+            --border: #e0e0e0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+        
+        body { background-color: var(--bg-color); color: var(--text-main); height: 100vh; display: flex; flex-direction: column; }
+
+        /* --- Header --- */
+        header {
+            background-color: var(--kib-navy);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid var(--kib-gold);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .logo-area { display: flex; align-items: center; gap: 15px; }
+        .logo-text { font-size: 22px; font-weight: 700; letter-spacing: 1px; color: var(--kib-gold); }
+        .logo-sub { font-size: 14px; font-weight: 400; color: #fff; }
+
+        .user-controls { display: none; align-items: center; gap: 20px; }
+        .user-badge { background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 20px; font-size: 14px; }
+        .logout-btn { background: transparent; border: 1px solid var(--kib-gold); color: var(--kib-gold); padding: 6px 15px; border-radius: 4px; cursor: pointer; transition: 0.2s; }
+        .logout-btn:hover { background: var(--kib-gold); color: var(--kib-navy); }
+
+        /* --- Main Layout --- */
+        .app-container { flex: 1; padding: 2rem; max-width: 1400px; margin: 0 auto; width: 100%; display: none; gap: 20px; grid-template-columns: 3fr 1fr; }
+        .active-view { display: grid; } /* Used for toggling views */
+
+        /* --- Login Screen --- */
+        .login-wrapper { display: flex; justify-content: center; align-items: center; height: 80vh; }
+        .login-card { background: var(--card-bg); padding: 3rem; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); width: 100%; max-width: 450px; text-align: center; border-top: 5px solid var(--kib-navy); }
+        .login-card h2 { color: var(--kib-navy); margin-bottom: 5px; }
+        .login-card p { color: var(--text-muted); margin-bottom: 25px; font-size: 14px; }
+        
+        .form-group { text-align: left; margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px; color: var(--kib-navy); }
+        select, input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 15px; outline: none; transition: border 0.3s; }
+        select:focus, input:focus { border-color: var(--kib-gold); }
+        
+        .btn-primary { width: 100%; background: var(--kib-navy); color: white; padding: 14px; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        .btn-primary:hover { background: #002244; }
+
+        /* --- Dashboard Components --- */
+        .main-content { display: flex; flex-direction: column; gap: 20px; }
+        .side-content { display: flex; flex-direction: column; gap: 20px; }
+
+        .card { background: var(--card-bg); border-radius: 10px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 15px; }
+        .card-title { color: var(--kib-navy); font-size: 18px; font-weight: 600; }
+
+        /* Stats Row */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .stat-box { background: #f8f9fa; border-left: 4px solid var(--kib-gold); padding: 15px; border-radius: 6px; }
+        .stat-value { font-size: 24px; font-weight: bold; color: var(--kib-navy); margin-top: 5px; }
+
+        /* Tables & Lists */
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border); font-size: 14px; }
+        th { color: var(--text-muted); font-weight: 600; background: #fafafa; }
+        
+        .badge { padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .badge-active { background: #d1e7dd; color: #0f5132; }
+        .badge-pending { background: #fff3cd; color: #856404; }
+
+        /* Live Agents on Break */
+        .live-agents { display: flex; flex-direction: column; gap: 10px; }
+        .agent-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #f8f9fa; border-radius: 6px; border-left: 3px solid var(--danger); }
+        .agent-item.empty { border-left-color: var(--success); color: var(--success); font-weight: bold; text-align: center; justify-content: center; }
+
+        /* Form Actions inside Cards */
+        .action-grid { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: end; }
+        .btn-gold { background: var(--kib-gold); color: white; padding: 12px 20px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-gold:hover { background: var(--kib-gold-hover); }
+
+        /* Swap Requests styling */
+        .swap-item { background: #fffdf5; border: 1px solid #ffecb3; padding: 15px; border-radius: 6px; margin-bottom: 10px; }
+        .swap-actions { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-sm { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; color: white; }
+        .btn-accept { background: var(--success); }
+        .btn-reject { background: var(--danger); }
+
+        /* Toasts */
+        #toast-container { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 9999; }
+        .toast { background: var(--kib-navy); color: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); border-left: 5px solid var(--kib-gold); display: flex; justify-content: space-between; align-items: center; min-width: 300px; animation: slideIn 0.3s ease-out forwards; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-area">
+            <div class="logo-text">KIB</div>
+            <div class="logo-sub">Break Management Portal</div>
+        </div>
+        <div class="user-controls" id="user-controls">
+            <div class="user-badge" id="header-user-name"></div>
+            <div class="user-badge" id="realtime-clock" style="font-family: monospace; font-size: 16px;">00:00:00</div>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </header>
+
+    <div id="login-view" class="login-wrapper">
+        <div class="login-card">
+            <h2>Employee Portal</h2>
+            <p>Secure authentication for Contact Center Agents</p>
+            
+            <div class="form-group">
+                <label>Select Your Name</label>
+                <select id="login-name">
+                    <option value="">-- Select Identity --</option>
+                    <optgroup label="Quality Assurance">
+                        <option>Fatmah Alhamar</option><option>Badreyah BoRubayea</option><option>Mohammad Abdulraheem</option>
+                    </optgroup>
+                    <optgroup label="Wage Agents">
+                        <option>Ahmed Nidah</option><option>Bilal Faisal</option><option>Fatemeh Mayahi</option><option>Nahla Ibrahem</option>
+                    </optgroup>
+                    <optgroup label="Inbound Agents">
+                        <option>Fouzeyah Erzouqi</option><option>Sarah Alqattan</option><option>Danah Alenezi</option>
+                        <option>Yasmine Maraafi</option><option>Ezz Alsalem</option><option>Abdullah Bakhsh</option>
+                        <option>Abdulaziz Bozobar</option><option>Abdulrahman Abdullah</option><option>Saleh Aljabri</option>
+                        <option>Omar Almutairi</option><option>Mohammad Alshakhs</option>
+                    </optgroup>
+                    <optgroup label="ITM Agents">
+                        <option>Ahmad Alenezi</option><option>Salman Albaqshi</option><option>Dhari Alshammari</option>
+                        <option>Badreyah Alruwayeh</option><option>Mariam Almutairi</option><option>Abdullah Rajab</option>
+                    </optgroup>
+                    <optgroup label="Outbound Agents">
+                        <option>Asrar Alattar</option><option>Latefah Alhouti</option>
+                    </optgroup>
+                    <optgroup label="Management & Team Leaders">
+                        <option>Talal Al Jarki</option><option>Naser Bandar</option><option>Hasan Alajmi</option>
+                        <option>Athoub Alnoufal</option><option>Shouq Alkandari</option><option>Alanoud Alotaibi</option>
+                    </optgroup>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Shift Start Time</label>
+                <select id="login-shift">
+                    <option value="07:00">07:00 AM</option><option value="08:00">08:00 AM</option>
+                    <option value="09:00">09:00 AM</option><option value="10:00">10:00 AM</option>
+                    <option value="11:00">11:00 AM</option><option value="12:00">12:00 PM</option>
+                    <option value="13:00">01:00 PM</option><option value="14:00">02:00 PM</option>
+                    <option value="15:00">03:00 PM</option><option value="16:00">04:00 PM</option>
+                    <option value="17:00">05:00 PM</option><option value="18:00">06:00 PM</option>
+                    <option value="19:00">07:00 PM</option>
+                </select>
+            </div>
+            
+            <button class="btn-primary" onclick="login()">Enter Workspace</button>
+        </div>
+    </div>
+
+    <div id="dashboard-view" class="app-container">
+        
+        <div class="main-content">
+            
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div style="font-size: 13px; color: var(--text-muted);">Shift Hours</div>
+                    <div class="stat-value" id="ui-shift-hours">07:00 - 15:00</div>
+                </div>
+                <div class="stat-box">
+                    <div style="font-size: 13px; color: var(--text-muted);">Remaining Balance</div>
+                    <div class="stat-value" id="ui-balance">60 <span style="font-size: 14px; color: var(--text-muted);">Mins</span></div>
+                </div>
+                <div class="stat-box">
+                    <div style="font-size: 13px; color: var(--text-muted);">Used Breaks</div>
+                    <div class="stat-value" id="ui-used">0 <span style="font-size: 14px; color: var(--text-muted);">Mins</span></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Book a Break</div>
+                </div>
+                <div class="action-grid">
+                    <div class="form-group" style="margin: 0;">
+                        <label>Select Time</label>
+                        <input type="time" id="book-time">
+                    </div>
+                    <div class="form-group" style="margin: 0;">
+                        <label>Duration</label>
+                        <select id="book-duration">
+                            <option value="15">15 Minutes</option>
+                            <option value="30">30 Minutes (Max)</option>
+                        </select>
+                    </div>
+                    <button class="btn-primary" onclick="bookBreak()">Submit Request</button>
+                </div>
+                <p style="font-size: 12px; color: var(--danger); margin-top: 10px;">* Rule: Max 2 agents per slot. Cannot book in first/last 15 mins of shift.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Global Break Schedule (Today)</div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Agent Name</th>
+                            <th>Time Slot</th>
+                            <th>Duration</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="timeline-body">
+                        </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <div class="side-content">
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Currently on Break</div>
+                </div>
+                <div class="live-agents" id="live-agents-container">
+                    </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Request Swap</div>
+                </div>
+                <div class="form-group">
+                    <label>Select Agent</label>
+                    <select id="swap-agent-select"></select>
+                </div>
+                <div class="form-group">
+                    <label>Your Break Slot to Swap</label>
+                    <select id="swap-slot-select"></select>
+                </div>
+                <button class="btn-gold" style="width: 100%;" onclick="sendSwapRequest()">Send Request</button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Swap Requests Inbox</div>
+                </div>
+                <div id="swap-inbox-container">
+                    </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script>
+        // --- Core Data Management (Simulating DB with localStorage) ---
+        const DB_KEY = 'kib_pro_db';
+        let currentUser = null;
+
+        function getDB() {
+            const defaultDB = { bookings: [], swaps: [], dateStr: new Date().toDateString() };
+            let db = JSON.parse(localStorage.getItem(DB_KEY));
+            // Reset DB if it's a new day
+            if (!db || db.dateStr !== new Date().toDateString()) {
+                db = defaultDB;
+                localStorage.setItem(DB_KEY, JSON.stringify(db));
+            }
+            return db;
+        }
+
+        function saveDB(db) {
+            localStorage.setItem(DB_KEY, JSON.stringify(db));
+            renderDashboard(); // Update local screen
+        }
+
+        // Listen for changes from other tabs (Real-time sync)
+        window.addEventListener('storage', (e) => {
+            if (e.key === DB_KEY && currentUser) {
+                renderDashboard();
+                checkNotifications();
+            }
+        });
+
+        // --- Helpers ---
+        function timeToMins(timeStr) {
+            const [h, m] = timeStr.split(':').map(Number);
+            return h * 60 + m;
+        }
+
+        function minsToTime(mins) {
+            const h = Math.floor(mins / 60).toString().padStart(2, '0');
+            const m = (mins % 60).toString().padStart(2, '0');
+            return `${h}:${m}`;
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<span>${message}</span>`;
+            if(type === 'error') toast.style.borderLeftColor = 'var(--danger)';
+            if(type === 'success') toast.style.borderLeftColor = 'var(--success)';
+            
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 5000);
+        }
+
+        // --- Auth ---
+        function login() {
+            const name = document.getElementById('login-name').value;
+            const shiftStr = document.getElementById('login-shift').value;
+
+            if (!name || !shiftStr) {
+                showToast("Please select your name and shift time.", "error");
+                return;
+            }
+
+            const startMins = timeToMins(shiftStr);
+            const endMins = startMins + (8 * 60); // Assuming 8 hour shift
+
+            currentUser = { name, shiftStr, startMins, endMins };
+            
+            document.getElementById('login-view').style.display = 'none';
+            document.getElementById('dashboard-view').classList.add('active-view');
+            document.getElementById('user-controls').style.display = 'flex';
+            document.getElementById('header-user-name').innerText = name;
+            document.getElementById('ui-shift-hours').innerText = `${shiftStr} - ${minsToTime(endMins)}`;
+
+            populateDropdowns();
+            renderDashboard();
+            startClocks();
+        }
+
+        function logout() {
+            currentUser = null;
+            location.reload();
+        }
+
+        // --- Core Logic ---
+        function bookBreak() {
+            const timeStr = document.getElementById('book-time').value;
+            const duration = parseInt(document.getElementById('book-duration').value);
+
+            if (!timeStr) return showToast("Please select a time.", "error");
+
+            const breakStart = timeToMins(timeStr);
+            const breakEnd = breakStart + duration;
+            let db = getDB();
+
+            // Validation 1: Within shift bounds & 15 min rule
+            if (breakStart < (currentUser.startMins + 15) || breakEnd > (currentUser.endMins - 15)) {
+                return showToast("Cannot book in the first or last 15 minutes of your shift, or outside shift hours.", "error");
+            }
+
+            // Validation 2: Balance check
+            const userBookings = db.bookings.filter(b => b.user === currentUser.name);
+            const usedMins = userBookings.reduce((sum, b) => sum + b.duration, 0);
+            if (usedMins + duration > 60) {
+                return showToast(`Insufficient balance. You only have ${60 - usedMins} mins left.`, "error");
+            }
+
+            // Validation 3: Concurrency check (Max 2 agents)
+            const overlapping = db.bookings.filter(b => {
+                const bStart = b.startMins;
+                const bEnd = b.startMins + b.duration;
+                // Overlap formula
+                return Math.max(breakStart, bStart) < Math.min(breakEnd, bEnd);
+            });
+
+            if (overlapping.length >= 2) {
+                return showToast("Time slot full! Max 2 agents allowed.", "error");
+            }
+
+            // Prevent self-overlap
+            if (overlapping.some(b => b.user === currentUser.name)) {
+                return showToast("You already have a break during this time.", "error");
+            }
+
+            // Save
+            db.bookings.push({
+                id: Date.now().toString(),
+                user: currentUser.name,
+                timeStr,
+                startMins: breakStart,
+                duration
+            });
+
+            saveDB(db);
+            showToast("Break booked successfully!", "success");
+            document.getElementById('book-time').value = '';
+        }
+
+        // --- Swap Logic ---
+        function sendSwapRequest() {
+            const targetUser = document.getElementById('swap-agent-select').value;
+            const slotId = document.getElementById('swap-slot-select').value;
+
+            if (!targetUser || !slotId) return showToast("Select an agent and a break slot.", "error");
+
+            let db = getDB();
+            
+            // Check if request already exists
+            if (db.swaps.some(s => s.slotId === slotId && s.status === 'pending')) {
+                return showToast("A pending swap request already exists for this slot.", "error");
+            }
+
+            db.swaps.push({
+                id: Date.now().toString(),
+                from: currentUser.name,
+                to: targetUser,
+                slotId: slotId,
+                status: 'pending'
+            });
+
+            saveDB(db);
+            showToast(`Swap request sent to ${targetUser}.`, "success");
+        }
+
+        function handleSwap(swapId, action) {
+            let db = getDB();
+            const swapIndex = db.swaps.findIndex(s => s.id === swapId);
+            if (swapIndex === -1) return;
+
+            const swap = db.swaps[swapIndex];
+            
+            if (action === 'accept') {
+                // Find the booking and change owner
+                const bookingIndex = db.bookings.findIndex(b => b.id === swap.slotId);
+                if (bookingIndex !== -1) {
+                    db.bookings[bookingIndex].user = currentUser.name; // Take ownership
+                    showToast("Swap accepted. The break is now yours.", "success");
+                }
+            } else {
+                showToast("Swap request rejected.", "info");
+            }
+
+            // Remove request
+            db.swaps.splice(swapIndex, 1);
+            saveDB(db);
+        }
+
+        // --- UI Rendering ---
+        function renderDashboard() {
+            if (!currentUser) return;
+            const db = getDB();
+
+            // Update Balance
+            const userBookings = db.bookings.filter(b => b.user === currentUser.name);
+            const usedMins = userBookings.reduce((sum, b) => sum + b.duration, 0);
+            document.getElementById('ui-used').innerHTML = `${usedMins} <span style="font-size:14px; color:var(--text-muted)">Mins</span>`;
+            document.getElementById('ui-balance').innerHTML = `${60 - usedMins} <span style="font-size:14px; color:var(--text-muted)">Mins</span>`;
+
+            // Update Timeline
+            const tbody = document.getElementById('timeline-body');
+            tbody.innerHTML = '';
+            
+            // Sort chronologically
+            const sortedBookings = [...db.bookings].sort((a, b) => a.startMins - b.startMins);
+            
+            sortedBookings.forEach(b => {
+                const isMe = b.user === currentUser.name;
+                const endStr = minsToTime(b.startMins + b.duration);
+                tbody.innerHTML += `
+                    <tr style="${isMe ? 'background: #f0f7ff;' : ''}">
+                        <td style="font-weight: ${isMe ? 'bold' : 'normal'}">${b.user} ${isMe ? '(You)' : ''}</td>
+                        <td>${b.timeStr} - ${endStr}</td>
+                        <td>${b.duration} mins</td>
+                        <td><span class="badge badge-active">Approved</span></td>
+                    </tr>
+                `;
+            });
+
+            // Update Swap My Slots Dropdown
+            const slotSelect = document.getElementById('swap-slot-select');
+            slotSelect.innerHTML = '<option value="">-- Select Your Booking --</option>';
+            userBookings.forEach(b => {
+                slotSelect.innerHTML += `<option value="${b.id}">${b.timeStr} (${b.duration} mins)</option>`;
+            });
+
+            // Update Swap Inbox
+            const inbox = document.getElementById('swap-inbox-container');
+            inbox.innerHTML = '';
+            const myPendingSwaps = db.swaps.filter(s => s.to === currentUser.name && s.status === 'pending');
+            
+            if (myPendingSwaps.length === 0) {
+                inbox.innerHTML = `<p style="font-size: 13px; color: var(--text-muted); text-align: center;">No pending requests</p>`;
+            } else {
+                myPendingSwaps.forEach(s => {
+                    // Find slot details
+                    const slot = db.bookings.find(b => b.id === s.slotId);
+                    if(slot) {
+                        inbox.innerHTML += `
+                            <div class="swap-item">
+                                <strong>${s.from}</strong> wants to give you their break at <strong>${slot.timeStr}</strong> (${slot.duration} mins).
+                                <div class="swap-actions">
+                                    <button class="btn-sm btn-accept" onclick="handleSwap('${s.id}', 'accept')">Accept</button>
+                                    <button class="btn-sm btn-reject" onclick="handleSwap('${s.id}', 'reject')">Reject</button>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+            }
+
+            renderLiveAgents(db);
+        }
+
+        function renderLiveAgents(db) {
+            const container = document.getElementById('live-agents-container');
+            container.innerHTML = '';
+            
+            const now = new Date();
+            const currentMins = now.getHours() * 60 + now.getMinutes();
+
+            const liveAgents = db.bookings.filter(b => currentMins >= b.startMins && currentMins < (b.startMins + b.duration));
+
+            if (liveAgents.length === 0) {
+                container.innerHTML = `<div class="agent-item empty">All agents are available</div>`;
+            } else {
+                liveAgents.forEach(b => {
+                    container.innerHTML += `
+                        <div class="agent-item">
+                            <span style="font-weight: 600;">${b.user}</span>
+                            <span class="badge badge-pending">Returns at ${minsToTime(b.startMins + b.duration)}</span>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        function populateDropdowns() {
+            // Get all names from login select to populate swap target select
+            const allOptions = Array.from(document.getElementById('login-name').options);
+            const swapSelect = document.getElementById('swap-agent-select');
+            swapSelect.innerHTML = '<option value="">-- Select Agent --</option>';
+            
+            allOptions.forEach(opt => {
+                if(opt.value && opt.value !== currentUser.name) {
+                    swapSelect.innerHTML += `<option value="${opt.value}">${opt.value}</option>`;
+                }
+            });
+        }
+
+        // --- Clocks & Notifications ---
+        let lastNotifiedMins = -1;
+        function startClocks() {
+            setInterval(() => {
+                const now = new Date();
+                document.getElementById('realtime-clock').innerText = now.toLocaleTimeString('en-US', { hour12: false });
+                
+                // Every minute check
+                const currentMins = now.getHours() * 60 + now.getMinutes();
+                if (currentMins !== lastNotifiedMins) {
+                    lastNotifiedMins = currentMins;
+                    renderLiveAgents(getDB()); // Refresh live status
+                    checkNotifications(currentMins);
+                }
+            }, 1000);
+        }
+
+        function checkNotifications(currentMins) {
+            if(!currentUser) return;
+            const db = getDB();
+            
+            db.bookings.forEach(b => {
+                if (b.user === currentUser.name) {
+                    if (b.startMins === currentMins) {
+                        showToast("🔔 Your break starts NOW!", "success");
+                    }
+                    if ((b.startMins + b.duration) === currentMins) {
+                        showToast("⏰ Break time is over. Please return to work.", "error");
+                    }
+                }
+            });
+        }
+
+    </script>
+</body>
+</html>
