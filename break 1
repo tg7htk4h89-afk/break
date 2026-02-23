@@ -1,599 +1,1157 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KIB | Call Center Break Portal</title>
-    <style>
-        /* --- KIB Corporate Theme & Reset --- */
-        :root {
-            --kib-navy: #003366;
-            --kib-gold: #C5A059;
-            --kib-gold-hover: #b38f4d;
-            --bg-color: #f0f2f5;
-            --card-bg: #ffffff;
-            --text-main: #333333;
-            --text-muted: #6c757d;
-            --success: #198754;
-            --danger: #dc3545;
-            --border: #e0e0e0;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>KIB · Break System</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{
+  --navy:#002868;--navy2:#001845;--navy3:#003d9e;
+  --gold:#b8860b;--gold2:#d4a017;--goldbg:#fdf6e3;--goldb:#e8c96a;
+  --bg:#f2f4f8;--white:#fff;--border:#e2e6ef;
+  --t1:#0f1c35;--t2:#5a6885;--t3:#9aaabf;
+  --green:#0a7c4a;--greenbg:#e6f4ed;
+  --red:#c0392b;--redbg:#fdecea;
+  --amber:#d97706;--amberbg:#fef3cd;
+  --r:10px;--rl:16px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;font-size:14px;}
+input,select,button,textarea{font-family:'DM Sans',sans-serif;}
+::-webkit-scrollbar{width:3px;height:3px;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
-        
-        body { background-color: var(--bg-color); color: var(--text-main); height: 100vh; display: flex; flex-direction: column; }
+/* LOGIN */
+#sLogin{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--white);}
+.lbox{width:100%;max-width:400px;background:var(--white);border:1px solid var(--border);border-radius:20px;box-shadow:0 8px 40px rgba(0,40,104,.12);overflow:hidden;}
+.lhdr{background:var(--navy);padding:30px 24px;text-align:center;position:relative;}
+.lhdr::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold2),var(--goldb),var(--gold2),transparent);}
+.lemb{width:60px;height:60px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:14px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:26px;}
+.lkib{font-size:24px;font-weight:800;color:#fff;letter-spacing:4px;}
+.lfull{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px;}
+.lbody{padding:24px;}
+.lbody h3{font-size:16px;font-weight:700;margin-bottom:3px;}
+.lbody p{font-size:12px;color:var(--t2);margin-bottom:20px;}
+.lbl{display:block;font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:5px;}
+.fld{width:100%;padding:12px 13px;border:1.5px solid var(--border);border-radius:var(--r);font-size:14px;color:var(--t1);background:var(--bg);outline:none;transition:.2s;-webkit-appearance:none;}
+.fld:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(0,40,104,.08);}
+.fld option{background:#fff;}
+.fg{margin-bottom:14px;}
+.btnLogin{width:100%;padding:14px;background:var(--navy);color:#fff;border:none;border-radius:var(--r);font-size:15px;font-weight:700;cursor:pointer;margin-top:6px;}
+.btnLogin:active{opacity:.9;transform:scale(.99);}
 
-        /* --- Header --- */
-        header {
-            background-color: var(--kib-navy);
-            color: white;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 4px solid var(--kib-gold);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
+/* APP */
+#sApp{display:none;min-height:100vh;padding-bottom:68px;}
 
-        .logo-area { display: flex; align-items: center; gap: 15px; }
-        .logo-text { font-size: 22px; font-weight: 700; letter-spacing: 1px; color: var(--kib-gold); }
-        .logo-sub { font-size: 14px; font-weight: 400; color: #fff; }
+/* TOPBAR */
+.topbar{background:var(--navy);height:54px;padding:0 14px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(0,40,104,.2);}
+.tbl{display:flex;align-items:center;gap:9px;}
+.tlogo{width:30px;height:30px;background:rgba(255,255,255,.12);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;}
+.ttitle{font-size:13px;font-weight:700;color:#fff;line-height:1.1;}
+.tsub{font-size:9px;color:rgba(255,255,255,.45);}
+.tbr{display:flex;align-items:center;gap:7px;}
+.clk{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:7px;padding:4px 9px;text-align:center;}
+.clkt{font-size:13px;font-weight:700;color:var(--gold2);font-variant-numeric:tabular-nums;}
+.clkd{font-size:9px;color:rgba(255,255,255,.4);}
+.bellbtn{width:30px;height:30px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;position:relative;}
+.bellbtn .bdot{position:absolute;top:4px;right:4px;width:7px;height:7px;background:#e84040;border-radius:50%;border:1.5px solid var(--navy);display:none;}
+.uav{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--navy);background:var(--gold2);cursor:pointer;}
 
-        .user-controls { display: none; align-items: center; gap: 20px; }
-        .user-badge { background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 20px; font-size: 14px; }
-        .logout-btn { background: transparent; border: 1px solid var(--kib-gold); color: var(--kib-gold); padding: 6px 15px; border-radius: 4px; cursor: pointer; transition: 0.2s; }
-        .logout-btn:hover { background: var(--kib-gold); color: var(--kib-navy); }
+/* ASTRIP */
+.astrip{background:var(--white);border-bottom:1px solid var(--border);padding:9px 14px;display:flex;align-items:center;gap:10px;}
+.asav{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0;}
+.asname{font-size:14px;font-weight:700;}
+.asdetail{font-size:11px;color:var(--t2);margin-top:1px;}
+.asr{margin-left:auto;display:flex;align-items:center;gap:7px;flex-shrink:0;}
+.balchip{background:var(--goldbg);border:1px solid var(--goldb);border-radius:20px;padding:4px 10px;font-size:12px;font-weight:700;color:var(--gold);}
+.btnout{border:1px solid var(--border);background:none;border-radius:7px;padding:5px 10px;font-size:11px;font-weight:600;color:var(--t2);cursor:pointer;}
 
-        /* --- Main Layout --- */
-        .app-container { flex: 1; padding: 2rem; max-width: 1400px; margin: 0 auto; width: 100%; display: none; gap: 20px; grid-template-columns: 3fr 1fr; }
-        .active-view { display: grid; } /* Used for toggling views */
+/* NAV */
+.bnav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--border);display:flex;z-index:100;box-shadow:0 -2px 8px rgba(0,0,0,.06);}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px 10px;border:none;background:none;cursor:pointer;position:relative;}
+.nb .ni{font-size:19px;margin-bottom:1px;}
+.nb .nl{font-size:9px;font-weight:600;color:var(--t3);}
+.nb.on .nl{color:var(--navy);font-weight:800;}
+.nb.on::after{content:'';position:absolute;top:0;left:25%;right:25%;height:2px;background:var(--navy);border-radius:0 0 2px 2px;}
+.nbadge{position:absolute;top:5px;right:calc(50% - 13px);background:#e84040;color:#fff;border-radius:10px;padding:1px 5px;font-size:9px;font-weight:800;display:none;}
 
-        /* --- Login Screen --- */
-        .login-wrapper { display: flex; justify-content: center; align-items: center; height: 80vh; }
-        .login-card { background: var(--card-bg); padding: 3rem; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); width: 100%; max-width: 450px; text-align: center; border-top: 5px solid var(--kib-navy); }
-        .login-card h2 { color: var(--kib-navy); margin-bottom: 5px; }
-        .login-card p { color: var(--text-muted); margin-bottom: 25px; font-size: 14px; }
-        
-        .form-group { text-align: left; margin-bottom: 15px; }
-        .form-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px; color: var(--kib-navy); }
-        select, input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 15px; outline: none; transition: border 0.3s; }
-        select:focus, input:focus { border-color: var(--kib-gold); }
-        
-        .btn-primary { width: 100%; background: var(--kib-navy); color: white; padding: 14px; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.3s; margin-top: 10px; }
-        .btn-primary:hover { background: #002244; }
+/* PAGES */
+.pg{display:none;padding:14px;}
+.pg.on{display:block;}
 
-        /* --- Dashboard Components --- */
-        .main-content { display: flex; flex-direction: column; gap: 20px; }
-        .side-content { display: flex; flex-direction: column; gap: 20px; }
+/* COMPONENTS */
+.sh{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;color:var(--t3);margin:18px 0 10px;display:flex;align-items:center;gap:7px;}
+.sh::before{content:'';width:3px;height:10px;background:var(--navy);border-radius:2px;display:inline-block;}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);margin-bottom:11px;overflow:hidden;}
+.ch{padding:12px 15px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.ct{font-size:13px;font-weight:700;color:var(--t1);}
+.cb{padding:14px;}
 
-        .card { background: var(--card-bg); border-radius: 10px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .card-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 15px; }
-        .card-title { color: var(--kib-navy); font-size: 18px; font-weight: 600; }
+/* BALANCE CARD */
+.balcard{background:var(--navy);border-radius:var(--rl);padding:18px;margin-bottom:11px;position:relative;overflow:hidden;}
+.balcard::before{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.04);}
+.bctop{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.bclbl{font-size:10px;font-weight:600;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.7px;}
+.bctag{background:rgba(184,134,11,.2);border:1px solid rgba(212,160,23,.3);border-radius:20px;padding:3px 9px;font-size:11px;font-weight:700;color:var(--gold2);}
+.bcmain{display:flex;align-items:flex-end;gap:4px;margin-bottom:10px;}
+.bcnum{font-size:44px;font-weight:800;color:#fff;line-height:1;font-variant-numeric:tabular-nums;}
+.bcunit{font-size:13px;color:rgba(255,255,255,.45);padding-bottom:7px;}
+.bcsub{font-size:11px;color:rgba(255,255,255,.4);margin-bottom:12px;}
+.bcpwrap{background:rgba(255,255,255,.1);border-radius:3px;height:4px;overflow:hidden;}
+.bcprog{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width .4s;}
+.bcprow{display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.4);margin-top:5px;}
 
-        /* Stats Row */
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-        .stat-box { background: #f8f9fa; border-left: 4px solid var(--kib-gold); padding: 15px; border-radius: 6px; }
-        .stat-value { font-size: 24px; font-weight: bold; color: var(--kib-navy); margin-top: 5px; }
+/* PILLS */
+.pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;}
+.pdot{width:5px;height:5px;border-radius:50%;}
+.pg-green{background:var(--greenbg);color:var(--green);}
+.pg-green .pdot{background:var(--green);animation:pp 2s infinite;}
+.pg-amber{background:var(--amberbg);color:var(--amber);}
+.pg-amber .pdot{background:var(--amber);animation:pp 1.5s infinite;}
+.pg-navy{background:rgba(0,40,104,.08);color:var(--navy);}
+.pg-red{background:var(--redbg);color:var(--red);}
+.pg-gold{background:var(--goldbg);color:var(--gold);}
+@keyframes pp{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
 
-        /* Tables & Lists */
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border); font-size: 14px; }
-        th { color: var(--text-muted); font-weight: 600; background: #fafafa; }
-        
-        .badge { padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
-        .badge-active { background: #d1e7dd; color: #0f5132; }
-        .badge-pending { background: #fff3cd; color: #856404; }
+/* AGENT ROW */
+.agrow{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.agrow:last-child{border-bottom:none;}
+.agav{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;}
+.agn{font-size:13px;font-weight:600;}
+.ags{font-size:11px;color:var(--t2);margin-top:1px;}
 
-        /* Live Agents on Break */
-        .live-agents { display: flex; flex-direction: column; gap: 10px; }
-        .agent-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #f8f9fa; border-radius: 6px; border-left: 3px solid var(--danger); }
-        .agent-item.empty { border-left-color: var(--success); color: var(--success); font-weight: bold; text-align: center; justify-content: center; }
+/* SLOT GRID */
+.sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:13px;}
+.slot{border:1.5px solid var(--border);border-radius:var(--r);padding:9px 5px;text-align:center;cursor:pointer;background:var(--white);transition:.15s;}
+.slot.sel{border-color:var(--navy);background:rgba(0,40,104,.05);}
+.slot.full{background:var(--redbg);border-color:rgba(192,57,43,.2);cursor:not-allowed;}
+.slot.partial{background:var(--amberbg);border-color:rgba(217,119,6,.2);}
+.slot.mine{background:rgba(0,40,104,.05);border-color:var(--navy);cursor:not-allowed;}
+.slot.blocked{background:var(--bg);opacity:.5;cursor:not-allowed;}
+.slt{font-size:12px;font-weight:700;color:var(--t1);}
+.slw{font-size:10px;color:var(--t2);margin-top:2px;line-height:1.3;}
+.slot.sel .slt{color:var(--navy);}
+.slot.full .slt{color:var(--red);}
+.slot.mine .slt{color:var(--navy);}
 
-        /* Form Actions inside Cards */
-        .action-grid { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: end; }
-        .btn-gold { background: var(--kib-gold); color: white; padding: 12px 20px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-gold:hover { background: var(--kib-gold-hover); }
+/* DUR BUTTONS */
+.durrow{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:13px;}
+.durbtn{padding:7px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--white);font-size:12px;font-weight:700;color:var(--t2);cursor:pointer;}
+.durbtn.sel{background:var(--navy);border-color:var(--navy);color:#fff;}
 
-        /* Swap Requests styling */
-        .swap-item { background: #fffdf5; border: 1px solid #ffecb3; padding: 15px; border-radius: 6px; margin-bottom: 10px; }
-        .swap-actions { display: flex; gap: 10px; margin-top: 10px; }
-        .btn-sm { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; color: white; }
-        .btn-accept { background: var(--success); }
-        .btn-reject { background: var(--danger); }
+/* TIMELINE */
+.tline{padding-left:18px;position:relative;}
+.tline::before{content:'';position:absolute;left:5px;top:4px;bottom:4px;width:2px;background:var(--border);}
+.tlitem{position:relative;margin-bottom:12px;}
+.tlitem:last-child{margin-bottom:0;}
+.tldot{position:absolute;left:-18px;top:10px;width:10px;height:10px;border-radius:50%;background:var(--t3);border:2px solid var(--white);}
+.tldot.active{background:var(--navy);}
+.tldot.done{background:var(--green);}
+.tlcard{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:11px 13px;}
+.tltime{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
+.tltitle{font-size:13px;font-weight:700;}
+.tlmeta{font-size:11px;color:var(--t2);margin-top:2px;}
+.tlactions{display:flex;align-items:center;justify-content:space-between;margin-top:8px;}
 
-        /* Toasts */
-        #toast-container { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 9999; }
-        .toast { background: var(--kib-navy); color: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); border-left: 5px solid var(--kib-gold); display: flex; justify-content: space-between; align-items: center; min-width: 300px; animation: slideIn 0.3s ease-out forwards; }
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+/* BTNS */
+.btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:13px;border:none;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;transition:.15s;}
+.btn:active{transform:scale(.98);}
+.btn-navy{background:var(--navy);color:#fff;}
+.btn-green{background:var(--green);color:#fff;}
+.btn-red{background:var(--redbg);color:var(--red);border:1px solid rgba(192,57,43,.2)!important;}
+.btn-outline{background:none;border:1.5px solid var(--border);color:var(--t2);}
+.bsm{padding:7px 13px;font-size:12px;width:auto;border-radius:7px;border:1px solid var(--border)!important;}
 
-    </style>
+/* ACTIVE BREAK BANNER */
+.abbanner{background:var(--navy);border-radius:var(--rl);padding:16px;margin-bottom:11px;position:relative;overflow:hidden;}
+.abbanner::before{content:'';position:absolute;top:-25px;right:-25px;width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,.04);}
+.abinner{position:relative;z-index:1;}
+.abtag{font-size:10px;font-weight:600;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px;}
+.abrow{display:flex;align-items:center;justify-content:space-between;}
+.abtype{font-size:14px;font-weight:700;color:#fff;}
+.abtimer{font-size:36px;font-weight:800;color:var(--gold2);letter-spacing:3px;font-variant-numeric:tabular-nums;}
+.absub{font-size:10px;color:rgba(255,255,255,.4);margin-top:2px;text-align:right;}
+.abpwrap{background:rgba(255,255,255,.12);border-radius:3px;height:4px;margin-top:13px;}
+.abprog{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width .5s;}
+.btnend{margin-top:12px;width:100%;padding:11px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);border-radius:var(--r);color:#fff;font-size:13px;font-weight:700;cursor:pointer;}
+
+/* SWAP */
+.swapcard{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:13px 14px;margin-bottom:9px;}
+.swapfrom{font-size:11px;color:var(--t2);margin-bottom:5px;}
+.swaptitle{font-size:14px;font-weight:700;margin-bottom:3px;}
+.swapmeta{font-size:12px;color:var(--t2);margin-bottom:10px;}
+.swapbtns{display:flex;gap:7px;}
+
+/* NOTIF PANEL */
+.npanel{position:fixed;top:54px;left:0;right:0;z-index:200;background:var(--white);border-bottom:1px solid var(--border);box-shadow:0 8px 24px rgba(0,0,0,.1);transform:translateY(-110%);transition:.3s;max-height:70vh;overflow-y:auto;}
+.npanel.open{transform:translateY(0);}
+.nhdr{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.nhdr span{font-size:14px;font-weight:700;}
+.btnclr{font-size:12px;font-weight:600;color:var(--navy);background:none;border:none;cursor:pointer;}
+.nitem{padding:11px 14px;border-bottom:1px solid var(--border);display:flex;gap:9px;}
+.nitem.unread{background:rgba(0,40,104,.03);}
+.nicon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.nmsg{font-size:13px;line-height:1.5;}
+.ntime{font-size:10px;color:var(--t3);margin-top:3px;}
+
+/* HIST ROW */
+.histrow{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.histrow:last-child{border-bottom:none;}
+.hicon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.hinfo{flex:1;min-width:0;}
+.htitle{font-size:13px;font-weight:700;}
+.hmeta{font-size:11px;color:var(--t2);margin-top:1px;}
+.hr{text-align:right;flex-shrink:0;}
+.hdur{font-size:14px;font-weight:800;color:var(--navy);}
+
+/* AGENT PICK */
+.aplist{max-height:250px;overflow-y:auto;margin-bottom:12px;}
+.apitem{display:flex;align-items:center;gap:9px;padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:6px;cursor:pointer;background:var(--white);}
+.apitem.sel{border-color:var(--navy);background:rgba(0,40,104,.04);}
+.apav{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;flex-shrink:0;}
+.apname{font-size:13px;font-weight:600;}
+.apsub{font-size:11px;color:var(--t2);}
+
+/* MODAL */
+.moverlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:400;display:flex;align-items:flex-end;}
+.msheet{background:var(--white);width:100%;border-radius:20px 20px 0 0;padding:20px 16px 30px;max-height:80vh;overflow-y:auto;}
+.msheet h3{font-size:16px;font-weight:800;margin-bottom:4px;}
+.msheet p{font-size:12px;color:var(--t2);margin-bottom:16px;}
+
+/* SETTINGS */
+.srow{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);}
+.srow:last-child{border-bottom:none;}
+.srl{font-size:13px;font-weight:600;}
+.srs{font-size:11px;color:var(--t2);margin-top:1px;}
+.si{width:70px;padding:8px 10px;border:1.5px solid var(--border);border-radius:var(--r);font-size:14px;font-weight:700;color:var(--navy);text-align:center;background:var(--bg);outline:none;}
+.si:focus{border-color:var(--navy);}
+
+/* ADROW */
+.adrow{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--border);}
+.adrow:last-child{border-bottom:none;}
+
+/* EMPTY */
+.empty{text-align:center;padding:30px 16px;}
+.ei{font-size:32px;opacity:.3;margin-bottom:9px;}
+.ep{font-size:13px;color:var(--t3);}
+
+/* TOAST */
+.toast{position:fixed;top:63px;left:14px;right:14px;background:var(--white);border:1px solid var(--border);border-radius:11px;padding:12px 14px;display:flex;align-items:center;gap:9px;box-shadow:0 8px 30px rgba(0,0,0,.12);z-index:500;font-size:13px;font-weight:600;transform:translateY(-90px);opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1);}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.ok{border-left:3px solid var(--green);}
+.toast.err{border-left:3px solid var(--red);}
+.toast.inf{border-left:3px solid var(--navy);}
+
+/* INFO BOX */
+.infobox{background:rgba(0,40,104,.05);border-radius:var(--r);padding:9px 12px;margin-bottom:12px;font-size:12px;color:var(--navy);font-weight:600;}
+
+@media(min-width:520px){.sgrid{grid-template-columns:repeat(4,1fr);}}
+</style>
 </head>
 <body>
 
-    <header>
-        <div class="logo-area">
-            <div class="logo-text">KIB</div>
-            <div class="logo-sub">Break Management Portal</div>
-        </div>
-        <div class="user-controls" id="user-controls">
-            <div class="user-badge" id="header-user-name"></div>
-            <div class="user-badge" id="realtime-clock" style="font-family: monospace; font-size: 16px;">00:00:00</div>
-            <button class="logout-btn" onclick="logout()">Logout</button>
-        </div>
-    </header>
+<div id="sLogin">
+  <div class="lbox">
+    <div class="lhdr">
+      <div class="lemb">&#127978;</div>
+      <div class="lkib">KIB</div>
+      <div class="lfull">Kuwait International Bank</div>
+    </div>
+    <div class="lbody">
+      <h3>Break Management System</h3>
+      <p>Contact Center &middot; Sign in to continue</p>
+      <div class="fg"><label class="lbl">Employee Name</label><select class="fld" id="lname"><option value="">Select name</option></select></div>
+      <div class="fg"><label class="lbl">Shift Start</label><select class="fld" id="lshift"><option value="">Select shift</option></select></div>
+      <div class="fg"><label class="lbl">Role</label><select class="fld" id="lrole"><option value="agent">Agent</option><option value="supervisor">Supervisor</option><option value="admin">Admin</option></select></div>
+      <button class="btnLogin" onclick="doLogin()">Sign In &rarr;</button>
+    </div>
+  </div>
+</div>
 
-    <div id="login-view" class="login-wrapper">
-        <div class="login-card">
-            <h2>Employee Portal</h2>
-            <p>Secure authentication for Contact Center Agents</p>
-            
-            <div class="form-group">
-                <label>Select Your Name</label>
-                <select id="login-name">
-                    <option value="">-- Select Identity --</option>
-                    <optgroup label="Quality Assurance">
-                        <option>Fatmah Alhamar</option><option>Badreyah BoRubayea</option><option>Mohammad Abdulraheem</option>
-                    </optgroup>
-                    <optgroup label="Wage Agents">
-                        <option>Ahmed Nidah</option><option>Bilal Faisal</option><option>Fatemeh Mayahi</option><option>Nahla Ibrahem</option>
-                    </optgroup>
-                    <optgroup label="Inbound Agents">
-                        <option>Fouzeyah Erzouqi</option><option>Sarah Alqattan</option><option>Danah Alenezi</option>
-                        <option>Yasmine Maraafi</option><option>Ezz Alsalem</option><option>Abdullah Bakhsh</option>
-                        <option>Abdulaziz Bozobar</option><option>Abdulrahman Abdullah</option><option>Saleh Aljabri</option>
-                        <option>Omar Almutairi</option><option>Mohammad Alshakhs</option>
-                    </optgroup>
-                    <optgroup label="ITM Agents">
-                        <option>Ahmad Alenezi</option><option>Salman Albaqshi</option><option>Dhari Alshammari</option>
-                        <option>Badreyah Alruwayeh</option><option>Mariam Almutairi</option><option>Abdullah Rajab</option>
-                    </optgroup>
-                    <optgroup label="Outbound Agents">
-                        <option>Asrar Alattar</option><option>Latefah Alhouti</option>
-                    </optgroup>
-                    <optgroup label="Management & Team Leaders">
-                        <option>Talal Al Jarki</option><option>Naser Bandar</option><option>Hasan Alajmi</option>
-                        <option>Athoub Alnoufal</option><option>Shouq Alkandari</option><option>Alanoud Alotaibi</option>
-                    </optgroup>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label>Shift Start Time</label>
-                <select id="login-shift">
-                    <option value="07:00">07:00 AM</option><option value="08:00">08:00 AM</option>
-                    <option value="09:00">09:00 AM</option><option value="10:00">10:00 AM</option>
-                    <option value="11:00">11:00 AM</option><option value="12:00">12:00 PM</option>
-                    <option value="13:00">01:00 PM</option><option value="14:00">02:00 PM</option>
-                    <option value="15:00">03:00 PM</option><option value="16:00">04:00 PM</option>
-                    <option value="17:00">05:00 PM</option><option value="18:00">06:00 PM</option>
-                    <option value="19:00">07:00 PM</option>
-                </select>
-            </div>
-            
-            <button class="btn-primary" onclick="login()">Enter Workspace</button>
-        </div>
+<div id="sApp">
+  <div class="topbar">
+    <div class="tbl">
+      <div class="tlogo">&#127978;</div>
+      <div><div class="ttitle">KIB Break System</div><div class="tsub">Contact Center</div></div>
+    </div>
+    <div class="tbr">
+      <div class="clk"><div class="clkt" id="clt">--:--</div><div class="clkd" id="cld"></div></div>
+      <div class="bellbtn" onclick="toggleN()">&#128276;<div class="bdot" id="ndot"></div></div>
+      <div class="uav" id="uav">M</div>
+    </div>
+  </div>
+
+  <div class="npanel" id="npanel">
+    <div class="nhdr"><span>&#128276; Notifications</span><button class="btnclr" onclick="clearN()">Mark all read</button></div>
+    <div id="nlist"><div class="empty"><div class="ep">No notifications</div></div></div>
+  </div>
+
+  <div class="astrip">
+    <div class="asav" id="asav">M</div>
+    <div><div class="asname" id="asname">&#8212;</div><div class="asdetail" id="asdetail">&#8212;</div></div>
+    <div class="asr"><div class="balchip" id="bchip">60 min</div><button class="btnout" onclick="doLogout()">Sign Out</button></div>
+  </div>
+
+  <!-- HOME -->
+  <div class="pg on" id="pg-home">
+    <div id="abbanner" style="display:none" class="abbanner">
+      <div class="abinner">
+        <div class="abtag">Break In Progress</div>
+        <div class="abrow"><div><div class="abtype" id="abtype">&#8212;</div></div><div><div class="abtimer" id="abtimer">00:00</div><div class="absub">elapsed</div></div></div>
+        <div class="abpwrap"><div class="abprog" id="abprog" style="width:0%"></div></div>
+      </div>
+      <button class="btnend" onclick="endBreak()">&#10003; &nbsp;End Break</button>
     </div>
 
-    <div id="dashboard-view" class="app-container">
-        
-        <div class="main-content">
-            
-            <div class="stats-grid">
-                <div class="stat-box">
-                    <div style="font-size: 13px; color: var(--text-muted);">Shift Hours</div>
-                    <div class="stat-value" id="ui-shift-hours">07:00 - 15:00</div>
-                </div>
-                <div class="stat-box">
-                    <div style="font-size: 13px; color: var(--text-muted);">Remaining Balance</div>
-                    <div class="stat-value" id="ui-balance">60 <span style="font-size: 14px; color: var(--text-muted);">Mins</span></div>
-                </div>
-                <div class="stat-box">
-                    <div style="font-size: 13px; color: var(--text-muted);">Used Breaks</div>
-                    <div class="stat-value" id="ui-used">0 <span style="font-size: 14px; color: var(--text-muted);">Mins</span></div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Book a Break</div>
-                </div>
-                <div class="action-grid">
-                    <div class="form-group" style="margin: 0;">
-                        <label>Select Time</label>
-                        <input type="time" id="book-time">
-                    </div>
-                    <div class="form-group" style="margin: 0;">
-                        <label>Duration</label>
-                        <select id="book-duration">
-                            <option value="15">15 Minutes</option>
-                            <option value="30">30 Minutes (Max)</option>
-                        </select>
-                    </div>
-                    <button class="btn-primary" onclick="bookBreak()">Submit Request</button>
-                </div>
-                <p style="font-size: 12px; color: var(--danger); margin-top: 10px;">* Rule: Max 2 agents per slot. Cannot book in first/last 15 mins of shift.</p>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Global Break Schedule (Today)</div>
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Agent Name</th>
-                            <th>Time Slot</th>
-                            <th>Duration</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="timeline-body">
-                        </tbody>
-                </table>
-            </div>
-
-        </div>
-
-        <div class="side-content">
-            
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Currently on Break</div>
-                </div>
-                <div class="live-agents" id="live-agents-container">
-                    </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Request Swap</div>
-                </div>
-                <div class="form-group">
-                    <label>Select Agent</label>
-                    <select id="swap-agent-select"></select>
-                </div>
-                <div class="form-group">
-                    <label>Your Break Slot to Swap</label>
-                    <select id="swap-slot-select"></select>
-                </div>
-                <button class="btn-gold" style="width: 100%;" onclick="sendSwapRequest()">Send Request</button>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Swap Requests Inbox</div>
-                </div>
-                <div id="swap-inbox-container">
-                    </div>
-            </div>
-
-        </div>
+    <div class="balcard">
+      <div class="bctop"><div class="bclbl">Break Balance</div><div class="bctag" id="btag">Today</div></div>
+      <div class="bcmain"><div class="bcnum" id="bcnum">60</div><div class="bcunit">min remaining</div></div>
+      <div class="bcsub" id="bcsub">0 of 60 minutes used</div>
+      <div class="bcpwrap"><div class="bcprog" id="bcprog" style="width:0%"></div></div>
+      <div class="bcprow"><span id="bcused">0 min used</span><span id="bctotal">60 min total</span></div>
     </div>
 
-    <div id="toast-container"></div>
+    <div class="sh">Now on Break</div>
+    <div class="card"><div class="cb" style="padding:2px 14px" id="nowPanel"><div class="empty"><div class="ep">No one on break right now</div></div></div></div>
 
-    <script>
-        // --- Core Data Management (Simulating DB with localStorage) ---
-        const DB_KEY = 'kib_pro_db';
-        let currentUser = null;
+    <div class="sh">My Schedule Today</div>
+    <div id="schedPanel"><div class="empty"><div class="ei">&#128197;</div><div class="ep">No breaks scheduled. Go to <strong>Book</strong>.</div></div></div>
+  </div>
 
-        function getDB() {
-            const defaultDB = { bookings: [], swaps: [], dateStr: new Date().toDateString() };
-            let db = JSON.parse(localStorage.getItem(DB_KEY));
-            // Reset DB if it's a new day
-            if (!db || db.dateStr !== new Date().toDateString()) {
-                db = defaultDB;
-                localStorage.setItem(DB_KEY, JSON.stringify(db));
-            }
-            return db;
-        }
+  <!-- BOOK -->
+  <div class="pg" id="pg-book">
+    <div class="sh">Book a Break</div>
+    <div class="card">
+      <div class="ch"><div class="ct">&#8987; Select Time Slot</div></div>
+      <div class="cb">
+        <div style="font-size:11px;color:var(--t2);margin-bottom:11px;line-height:1.6;">White = available &nbsp;&#183;&nbsp; Yellow = 1 agent booked &nbsp;&#183;&nbsp; Red = full (2 agents) &nbsp;&#183;&nbsp; Grey = blocked</div>
+        <div class="sgrid" id="sgrid">Loading...</div>
+        <div class="infobox" id="slotinfo" style="display:none"></div>
+      </div>
+    </div>
+    <div class="card" id="durcard" style="display:none">
+      <div class="ch"><div class="ct">&#9203; Break Duration</div></div>
+      <div class="cb">
+        <div class="durrow" id="durrow"></div>
+        <div style="font-size:11px;color:var(--t2)">Max 30 min. Balance: <strong id="durbal">60 min</strong></div>
+      </div>
+    </div>
+    <div id="bookbtnwrap" style="display:none">
+      <button class="btn btn-navy" onclick="confirmBook()">&#128197; &nbsp;Confirm Booking</button>
+    </div>
+  </div>
 
-        function saveDB(db) {
-            localStorage.setItem(DB_KEY, JSON.stringify(db));
-            renderDashboard(); // Update local screen
-        }
+  <!-- SWAP -->
+  <div class="pg" id="pg-swap">
+    <div class="sh">Incoming Swap Requests</div>
+    <div id="inswap"><div class="empty"><div class="ei">&#128260;</div><div class="ep">No pending requests</div></div></div>
+    <div class="sh">My Breaks (Swap)</div>
+    <div id="myswap"><div class="empty"><div class="ei">&#9749;</div><div class="ep">No scheduled breaks to swap</div></div></div>
+  </div>
 
-        // Listen for changes from other tabs (Real-time sync)
-        window.addEventListener('storage', (e) => {
-            if (e.key === DB_KEY && currentUser) {
-                renderDashboard();
-                checkNotifications();
-            }
-        });
+  <!-- HISTORY -->
+  <div class="pg" id="pg-hist">
+    <div class="sh">My Break History Today</div>
+    <div class="card"><div class="cb" style="padding:2px 14px" id="histpanel"><div class="empty"><div class="ep">No breaks today</div></div></div></div>
+    <div id="supSection" style="display:none">
+      <div class="sh">All Agents Today</div>
+      <div class="card"><div class="cb" style="padding:2px 14px" id="allpanel"></div></div>
+    </div>
+  </div>
 
-        // --- Helpers ---
-        function timeToMins(timeStr) {
-            const [h, m] = timeStr.split(':').map(Number);
-            return h * 60 + m;
-        }
+  <!-- ADMIN -->
+  <div class="pg" id="pg-admin">
+    <div class="sh">Agents</div>
+    <div class="card" style="margin-bottom:11px"><div class="cb"><div style="display:flex;gap:7px"><input type="text" class="fld" id="nagent" placeholder="Full name" style="flex:1" onkeypress="if(event.key==='Enter')addAg()"><button class="btn btn-navy bsm" onclick="addAg()">+ Add</button></div></div></div>
+    <div class="card"><div class="cb" style="padding:2px 14px" id="aglist"></div></div>
+    <div class="sh">Settings</div>
+    <div class="card">
+      <div class="cb" style="padding:2px 14px">
+        <div class="srow"><div><div class="srl">Daily Allowance (min)</div><div class="srs">Total per agent per day</div></div><input type="number" class="si" id="smax" value="60" min="15" max="180"></div>
+        <div class="srow"><div><div class="srl">Max Concurrent</div><div class="srs">Agents at same time</div></div><input type="number" class="si" id="scon" value="2" min="1" max="10"></div>
+        <div class="srow"><div><div class="srl">Max Single Break (min)</div><div class="srs">Per booking</div></div><input type="number" class="si" id="smaxb" value="30" min="5" max="90"></div>
+      </div>
+      <div class="cb" style="padding:11px 14px;border-top:1px solid var(--border)"><button class="btn btn-navy" onclick="saveSett()">&#128190; &nbsp;Save Settings</button></div>
+    </div>
+    <div class="sh">Data</div>
+    <div class="card"><div class="cb" style="display:flex;flex-direction:column;gap:9px">
+      <button class="btn btn-red" onclick="clearDay()">&#128465; &nbsp;Clear Today</button>
+      <button class="btn btn-red" onclick="clearAll()" style="opacity:.7">&#9888; &nbsp;Clear All Data</button>
+    </div></div>
+  </div>
 
-        function minsToTime(mins) {
-            const h = Math.floor(mins / 60).toString().padStart(2, '0');
-            const m = (mins % 60).toString().padStart(2, '0');
-            return `${h}:${m}`;
-        }
+  <div class="bnav">
+    <button class="nb on" id="nav-home" onclick="gp('home')"><span class="ni">&#127968;</span><span class="nl">Home</span></button>
+    <button class="nb" id="nav-book" onclick="gp('book')"><span class="ni">&#128197;</span><span class="nl">Book</span></button>
+    <button class="nb" id="nav-swap" onclick="gp('swap')"><span class="ni">&#128260;</span><span class="nl">Swap</span><span class="nbadge" id="swbadge"></span></button>
+    <button class="nb" id="nav-hist" onclick="gp('hist')"><span class="ni">&#128203;</span><span class="nl">History</span></button>
+    <button class="nb" id="nav-admin" onclick="gp('admin')" style="display:none"><span class="ni">&#9881;</span><span class="nl">Admin</span></button>
+  </div>
+</div>
 
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.innerHTML = `<span>${message}</span>`;
-            if(type === 'error') toast.style.borderLeftColor = 'var(--danger)';
-            if(type === 'success') toast.style.borderLeftColor = 'var(--success)';
-            
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 5000);
-        }
+<div class="toast" id="toast"></div>
 
-        // --- Auth ---
-        function login() {
-            const name = document.getElementById('login-name').value;
-            const shiftStr = document.getElementById('login-shift').value;
+<script>
+var SK = 'kibv6';
+var me = null;
+var selSlot = null;
+var selDur = 15;
+var activeTimerInt = null;
+var clockInt = null;
+var refInt = null;
+var toastTO = null;
 
-            if (!name || !shiftStr) {
-                showToast("Please select your name and shift time.", "error");
-                return;
-            }
+function today() { return new Date().toISOString().split('T')[0]; }
 
-            const startMins = timeToMins(shiftStr);
-            const endMins = startMins + (8 * 60); // Assuming 8 hour shift
+function gd() {
+  try {
+    var r = localStorage.getItem(SK);
+    return r ? JSON.parse(r) : defData();
+  } catch(e) { return defData(); }
+}
 
-            currentUser = { name, shiftStr, startMins, endMins };
-            
-            document.getElementById('login-view').style.display = 'none';
-            document.getElementById('dashboard-view').classList.add('active-view');
-            document.getElementById('user-controls').style.display = 'flex';
-            document.getElementById('header-user-name').innerText = name;
-            document.getElementById('ui-shift-hours').innerText = `${shiftStr} - ${minsToTime(endMins)}`;
+function defData() {
+  return {
+    agents: [
+      'Fouzeyah Erzouqi','Sarah Alqattan','Danah Alenezi','Yasmine Maraafi',
+      'Ezz Alsalem','Abdullah Bakhsh','Abdulaziz Bozobar','Abdulrahman Abdullah',
+      'Abdullah W Mohammad','Abdollah Shaverdi','Abdulaziz Alzuabi','Abdulrahman Alfassam',
+      'Abdulwahab Alsaber','Saleh Aljabri','Ali Alwayel','Ahmad Alnajdi',
+      'Ali ShahAli','Ayedh Alotaibi','Fahad Alabdullah','Hasan Ali',
+      'Hussain Alkhabbaz','Mohammad Alshakhs','Omar Almutairi','Omar Alsaeed',
+      'Omar Mohammad','Saad Alharbi','Sulaiman Alkhalaf','Asrar Alattar',
+      'Latefah Alhouti','Naser Bandar','Hasan Alajmi','Ahmad Alenezi',
+      'Salman Albaqshi','Dhari Alshammari','Badreyah Alruwayeh','Mariam Almutairi',
+      'Athoub Alnoufal','Shouq Alkandari','Alanoud Alotaibi','Mohammad Alothman',
+      'Abdulrahman Alahmad','Nourah Alhazzani','Ahmed Nidah','Bilal Faisal',
+      'Fatemeh Mayahi','Nahla Ibrahem'
+    ],
+    breaks: {},
+    swaps: [],
+    notifs: {},
+    settings: { dailyMin: 60, maxCon: 2, maxBreak: 30 }
+  };
+}
 
-            populateDropdowns();
-            renderDashboard();
-            startClocks();
-        }
+function sv(d) { d.ts = Date.now(); localStorage.setItem(SK, JSON.stringify(d)); }
 
-        function logout() {
-            currentUser = null;
-            location.reload();
-        }
+function tdb(d) {
+  var t = today();
+  if (!d.breaks[t]) d.breaks[t] = [];
+  return d.breaks[t];
+}
 
-        // --- Core Logic ---
-        function bookBreak() {
-            const timeStr = document.getElementById('book-time').value;
-            const duration = parseInt(document.getElementById('book-duration').value);
+// COLORS
+var COLS = ['#1a3a6c','#2d5a8e','#14532d','#4a1942','#7c2d12','#1e3a5f','#713f12','#1e4035'];
+function ac(n) {
+  var h = 0;
+  for (var i = 0; i < n.length; i++) h = (h + n.charCodeAt(i)) % COLS.length;
+  return COLS[h];
+}
+function ini(n) {
+  var p = n.trim().split(' ');
+  return p.length >= 2 ? (p[0][0] + p[1][0]).toUpperCase() : p[0][0].toUpperCase();
+}
 
-            if (!timeStr) return showToast("Please select a time.", "error");
+// TIME
+function toMin(hhmm) {
+  var p = hhmm.split(':');
+  return parseInt(p[0]) * 60 + parseInt(p[1]);
+}
+function fromMin(m) {
+  return ('0'+Math.floor(m/60)).slice(-2) + ':' + ('0'+(m%60)).slice(-2);
+}
+function fmt12(hhmm) {
+  var p = hhmm.split(':');
+  var h = parseInt(p[0]);
+  var hh = h % 12 || 12;
+  var ap = h < 12 ? 'AM' : 'PM';
+  return hh + ':' + p[1] + ' ' + ap;
+}
+function nowHHMM() {
+  var n = new Date();
+  return ('0'+n.getHours()).slice(-2) + ':' + ('0'+n.getMinutes()).slice(-2);
+}
 
-            const breakStart = timeToMins(timeStr);
-            const breakEnd = breakStart + duration;
-            let db = getDB();
+// INIT LOGIN
+function initLogin() {
+  var d = gd();
+  var s = document.getElementById('lname');
+  s.innerHTML = '<option value="">Select name</option>';
+  for (var i = 0; i < d.agents.length; i++) {
+    var o = document.createElement('option');
+    o.value = d.agents[i]; o.textContent = d.agents[i];
+    s.appendChild(o);
+  }
+  var sh = document.getElementById('lshift');
+  sh.innerHTML = '<option value="">Select shift</option>';
+  for (var h = 7; h <= 19; h++) {
+    var hh = h % 12 || 12;
+    var ap = h < 12 ? 'AM' : 'PM';
+    var val = ('0'+h).slice(-2) + ':00';
+    sh.innerHTML += '<option value="' + val + '">' + hh + ':00 ' + ap + '</option>';
+  }
+}
 
-            // Validation 1: Within shift bounds & 15 min rule
-            if (breakStart < (currentUser.startMins + 15) || breakEnd > (currentUser.endMins - 15)) {
-                return showToast("Cannot book in the first or last 15 minutes of your shift, or outside shift hours.", "error");
-            }
+// LOGIN
+function doLogin() {
+  var name = document.getElementById('lname').value;
+  var shift = document.getElementById('lshift').value;
+  var role = document.getElementById('lrole').value;
+  if (!name) { showToast('Please select your name','err'); return; }
+  if (!shift) { showToast('Please select shift start time','err'); return; }
+  var shEnd = ('0'+Math.min(parseInt(shift.split(':')[0])+9,19)).slice(-2)+':00';
+  me = { name:name, shift:shift, shiftEnd:shEnd, role:role };
+  document.getElementById('sLogin').style.display = 'none';
+  document.getElementById('sApp').style.display = 'block';
+  var a1 = document.getElementById('uav'); a1.textContent = ini(name);
+  var a2 = document.getElementById('asav'); a2.textContent = ini(name); a2.style.background = ac(name);
+  document.getElementById('asname').textContent = name;
+  document.getElementById('asdetail').textContent = role + ' · Shift ' + fmt12(shift) + ' – ' + fmt12(shEnd);
+  if (role !== 'agent') {
+    document.getElementById('nav-admin').style.display = 'flex';
+    document.getElementById('supSection').style.display = 'block';
+  }
+  startClock();
+  renderAll();
+  checkActiveBreak();
+  refInt = setInterval(renderAll, 8000);
+}
 
-            // Validation 2: Balance check
-            const userBookings = db.bookings.filter(b => b.user === currentUser.name);
-            const usedMins = userBookings.reduce((sum, b) => sum + b.duration, 0);
-            if (usedMins + duration > 60) {
-                return showToast(`Insufficient balance. You only have ${60 - usedMins} mins left.`, "error");
-            }
+function doLogout() {
+  me = null;
+  clearInterval(clockInt); clearInterval(refInt); clearInterval(activeTimerInt);
+  document.getElementById('sApp').style.display = 'none';
+  document.getElementById('sLogin').style.display = 'flex';
+  document.getElementById('abbanner').style.display = 'none';
+  initLogin();
+}
 
-            // Validation 3: Concurrency check (Max 2 agents)
-            const overlapping = db.bookings.filter(b => {
-                const bStart = b.startMins;
-                const bEnd = b.startMins + b.duration;
-                // Overlap formula
-                return Math.max(breakStart, bStart) < Math.min(breakEnd, bEnd);
-            });
+window.addEventListener('storage', function(e) { if (e.key === SK) renderAll(); });
 
-            if (overlapping.length >= 2) {
-                return showToast("Time slot full! Max 2 agents allowed.", "error");
-            }
+// CLOCK
+function startClock() {
+  function tick() {
+    var n = new Date();
+    document.getElementById('clt').textContent = n.toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit',hour12:true});
+    document.getElementById('cld').textContent = n.toLocaleDateString('en',{weekday:'short',day:'numeric',month:'short'});
+  }
+  tick(); clockInt = setInterval(tick, 1000);
+}
 
-            // Prevent self-overlap
-            if (overlapping.some(b => b.user === currentUser.name)) {
-                return showToast("You already have a break during this time.", "error");
-            }
+// SLOTS
+function validSlots() {
+  if (!me) return [];
+  var startM = toMin(me.shift);
+  var endM = toMin(me.shiftEnd);
+  var slots = [];
+  for (var m = startM; m < endM; m += 30) {
+    var valid = (m >= startM + 15) && (m + 15 <= endM - 15);
+    slots.push({ min:m, hhmm:fromMin(m), valid:valid });
+  }
+  return slots;
+}
 
-            // Save
-            db.bookings.push({
-                id: Date.now().toString(),
-                user: currentUser.name,
-                timeStr,
-                startMins: breakStart,
-                duration
-            });
+function concurrentAt(slotMin, dur, d, excludeId) {
+  var tb = tdb(d);
+  var count = 0;
+  for (var i = 0; i < tb.length; i++) {
+    var b = tb[i];
+    if (b.status === 'cancelled') continue;
+    if (excludeId && b.id === excludeId) continue;
+    var bS = toMin(b.breakStart);
+    var bE = bS + b.duration;
+    var sE = slotMin + dur;
+    if (bS < sE && bE > slotMin) count++;
+  }
+  return count;
+}
 
-            saveDB(db);
-            showToast("Break booked successfully!", "success");
-            document.getElementById('book-time').value = '';
-        }
+function usedMin(name, d) {
+  var tb = tdb(d);
+  var s = 0;
+  for (var i = 0; i < tb.length; i++) {
+    var b = tb[i];
+    if (b.agent === name && (b.status === 'active' || b.status === 'completed')) {
+      s += b.actualDuration || b.duration;
+    }
+  }
+  return s;
+}
 
-        // --- Swap Logic ---
-        function sendSwapRequest() {
-            const targetUser = document.getElementById('swap-agent-select').value;
-            const slotId = document.getElementById('swap-slot-select').value;
+function schedMin(name, d) {
+  var tb = tdb(d);
+  var s = 0;
+  for (var i = 0; i < tb.length; i++) {
+    var b = tb[i];
+    if (b.agent === name && b.status !== 'cancelled') s += b.duration;
+  }
+  return s;
+}
 
-            if (!targetUser || !slotId) return showToast("Select an agent and a break slot.", "error");
+function buildSlotGrid() {
+  if (!me) return;
+  var d = gd();
+  var slots = validSlots();
+  var tb = tdb(d);
+  var maxCon = d.settings ? (d.settings.maxCon || 2) : 2;
+  var nowM = toMin(nowHHMM());
+  var el = document.getElementById('sgrid');
+  if (!slots.length) { el.innerHTML = '<div style="color:var(--t3);font-size:12px;padding:16px;text-align:center">No slots for this shift</div>'; return; }
 
-            let db = getDB();
-            
-            // Check if request already exists
-            if (db.swaps.some(s => s.slotId === slotId && s.status === 'pending')) {
-                return showToast("A pending swap request already exists for this slot.", "error");
-            }
+  var html = '';
+  for (var i = 0; i < slots.length; i++) {
+    var slot = slots[i];
+    var sm = slot.min;
+    var atSlot = [];
+    var myHere = null;
+    for (var j = 0; j < tb.length; j++) {
+      var b = tb[j];
+      if (b.status === 'cancelled') continue;
+      var bS = toMin(b.breakStart);
+      var bE = bS + b.duration;
+      if (bS <= sm && bE > sm) {
+        atSlot.push(b);
+        if (b.agent === me.name) myHere = b;
+      }
+    }
+    var isPast = sm < nowM - 30;
+    var isBlocked = !slot.valid;
+    var isFull = atSlot.length >= maxCon;
+    var isPartial = !isFull && atSlot.length > 0;
+    var isSelected = selSlot && selSlot.min === sm;
 
-            db.swaps.push({
-                id: Date.now().toString(),
-                from: currentUser.name,
-                to: targetUser,
-                slotId: slotId,
-                status: 'pending'
-            });
+    var cls = 'slot';
+    var who = '';
+    var disabled = false;
 
-            saveDB(db);
-            showToast(`Swap request sent to ${targetUser}.`, "success");
-        }
+    if (myHere) { cls += ' mine'; who = 'Yours'; disabled = true; }
+    else if (isBlocked || isPast) { cls += ' blocked'; who = isBlocked ? 'Blocked' : 'Past'; disabled = true; }
+    else if (isFull) { cls += ' full'; who = atSlot.map(function(x){return x.agent.split(' ')[0];}).join(', '); disabled = true; }
+    else if (isPartial) { cls += ' partial'; who = atSlot.map(function(x){return x.agent.split(' ')[0];}).join(', '); }
+    else { who = 'Available'; }
+    if (isSelected && !disabled) cls += ' sel';
 
-        function handleSwap(swapId, action) {
-            let db = getDB();
-            const swapIndex = db.swaps.findIndex(s => s.id === swapId);
-            if (swapIndex === -1) return;
+    var onclick = disabled ? '' : 'pickSlot(' + sm + ',\'' + slot.hhmm + '\')';
+    html += '<div class="' + cls + '" onclick="' + onclick + '">';
+    html += '<div class="slt">' + fmt12(slot.hhmm) + '</div>';
+    html += '<div class="slw">' + who + '</div>';
+    html += '</div>';
+  }
+  el.innerHTML = html;
+}
 
-            const swap = db.swaps[swapIndex];
-            
-            if (action === 'accept') {
-                // Find the booking and change owner
-                const bookingIndex = db.bookings.findIndex(b => b.id === swap.slotId);
-                if (bookingIndex !== -1) {
-                    db.bookings[bookingIndex].user = currentUser.name; // Take ownership
-                    showToast("Swap accepted. The break is now yours.", "success");
-                }
-            } else {
-                showToast("Swap request rejected.", "info");
-            }
+function pickSlot(min, hhmm) {
+  selSlot = { min:min, hhmm:hhmm };
+  buildSlotGrid();
+  var d = gd();
+  var maxBreak = d.settings ? (d.settings.maxBreak || 30) : 30;
+  var daily = d.settings ? (d.settings.dailyMin || 60) : 60;
+  var sched = schedMin(me.name, d);
+  var remaining = Math.max(daily - sched, 0);
+  var maxDur = Math.min(maxBreak, remaining);
+  if (maxDur < 1) { showToast('Not enough break balance','err'); return; }
 
-            // Remove request
-            db.swaps.splice(swapIndex, 1);
-            saveDB(db);
-        }
+  var durrow = document.getElementById('durrow');
+  var opts = [5,10,15,20,25,30];
+  var html = '';
+  for (var i = 0; i < opts.length; i++) {
+    if (opts[i] <= maxDur) {
+      var sel2 = selDur === opts[i] ? ' sel' : '';
+      html += '<button class="durbtn' + sel2 + '" onclick="pickDur(' + opts[i] + ')">' + opts[i] + ' min</button>';
+    }
+  }
+  durrow.innerHTML = html;
+  if (selDur > maxDur) selDur = Math.min(15, maxDur);
+  document.getElementById('durbal').textContent = remaining + ' min';
+  document.getElementById('durcard').style.display = 'block';
 
-        // --- UI Rendering ---
-        function renderDashboard() {
-            if (!currentUser) return;
-            const db = getDB();
+  var info = document.getElementById('slotinfo');
+  info.style.display = 'block';
+  info.textContent = 'Selected: ' + fmt12(hhmm) + ' · ' + selDur + ' min';
+  document.getElementById('bookbtnwrap').style.display = 'block';
+}
 
-            // Update Balance
-            const userBookings = db.bookings.filter(b => b.user === currentUser.name);
-            const usedMins = userBookings.reduce((sum, b) => sum + b.duration, 0);
-            document.getElementById('ui-used').innerHTML = `${usedMins} <span style="font-size:14px; color:var(--text-muted)">Mins</span>`;
-            document.getElementById('ui-balance').innerHTML = `${60 - usedMins} <span style="font-size:14px; color:var(--text-muted)">Mins</span>`;
+function pickDur(dur) {
+  selDur = dur;
+  document.querySelectorAll('.durbtn').forEach(function(b){ b.classList.toggle('sel', parseInt(b.textContent) === dur); });
+  if (selSlot) document.getElementById('slotinfo').textContent = 'Selected: ' + fmt12(selSlot.hhmm) + ' · ' + selDur + ' min';
+}
 
-            // Update Timeline
-            const tbody = document.getElementById('timeline-body');
-            tbody.innerHTML = '';
-            
-            // Sort chronologically
-            const sortedBookings = [...db.bookings].sort((a, b) => a.startMins - b.startMins);
-            
-            sortedBookings.forEach(b => {
-                const isMe = b.user === currentUser.name;
-                const endStr = minsToTime(b.startMins + b.duration);
-                tbody.innerHTML += `
-                    <tr style="${isMe ? 'background: #f0f7ff;' : ''}">
-                        <td style="font-weight: ${isMe ? 'bold' : 'normal'}">${b.user} ${isMe ? '(You)' : ''}</td>
-                        <td>${b.timeStr} - ${endStr}</td>
-                        <td>${b.duration} mins</td>
-                        <td><span class="badge badge-active">Approved</span></td>
-                    </tr>
-                `;
-            });
+function confirmBook() {
+  if (!me || !selSlot) return;
+  var d = gd();
+  var daily = d.settings ? (d.settings.dailyMin || 60) : 60;
+  var maxCon = d.settings ? (d.settings.maxCon || 2) : 2;
+  var maxBreak = d.settings ? (d.settings.maxBreak || 30) : 30;
+  if (selDur > maxBreak) { showToast('Max ' + maxBreak + ' min per break','err'); return; }
+  var sched = schedMin(me.name, d);
+  if (sched + selDur > daily) { showToast('Not enough balance','err'); return; }
+  var conc = concurrentAt(selSlot.min, selDur, d, null);
+  if (conc >= maxCon) { showToast('Slot full – max ' + maxCon + ' at same time','err'); return; }
+  var tb = tdb(d);
+  for (var i = 0; i < tb.length; i++) {
+    var b = tb[i];
+    if (b.agent === me.name && b.status !== 'cancelled') {
+      var bS = toMin(b.breakStart);
+      var bE = bS + b.duration;
+      var sE = selSlot.min + selDur;
+      if (bS < sE && bE > selSlot.min) { showToast('You already have a break at that time','err'); return; }
+    }
+  }
+  var brk = {
+    id: Date.now().toString(),
+    agent: me.name,
+    shift: me.shift,
+    breakStart: selSlot.hhmm,
+    duration: selDur,
+    status: 'scheduled',
+    startedAt: null, endedAt: null, actualDuration: null,
+    date: today()
+  };
+  tb.push(brk);
+  sv(d);
+  showToast('Break booked: ' + fmt12(brk.breakStart) + ' · ' + selDur + ' min', 'ok');
+  selSlot = null; selDur = 15;
+  document.getElementById('durcard').style.display = 'none';
+  document.getElementById('bookbtnwrap').style.display = 'none';
+  document.getElementById('slotinfo').style.display = 'none';
+  schedNotifs(brk);
+  renderAll(); buildSlotGrid();
+}
 
-            // Update Swap My Slots Dropdown
-            const slotSelect = document.getElementById('swap-slot-select');
-            slotSelect.innerHTML = '<option value="">-- Select Your Booking --</option>';
-            userBookings.forEach(b => {
-                slotSelect.innerHTML += `<option value="${b.id}">${b.timeStr} (${b.duration} mins)</option>`;
-            });
+function schedNotifs(brk) {
+  var startM = toMin(brk.breakStart);
+  var nowM = toMin(nowHHMM());
+  var msStart = (startM - nowM) * 60000;
+  var msEnd   = (startM + brk.duration - nowM) * 60000;
+  if (msStart > 0 && msStart < 12*60*60000) {
+    setTimeout(function() {
+      pushNotif(brk.agent, 'Your break has started (' + fmt12(brk.breakStart) + ' · ' + brk.duration + ' min)', 'start');
+      if (me && brk.agent === me.name) showToast('Your break has started!', 'ok');
+    }, msStart);
+  }
+  if (msEnd > 0 && msEnd < 12*60*60000) {
+    setTimeout(function() {
+      pushNotif(brk.agent, 'Your break has ended – please return to desk', 'end');
+      if (me && brk.agent === me.name) showToast('Break time is over – back to desk!', 'inf');
+    }, msEnd);
+  }
+}
 
-            // Update Swap Inbox
-            const inbox = document.getElementById('swap-inbox-container');
-            inbox.innerHTML = '';
-            const myPendingSwaps = db.swaps.filter(s => s.to === currentUser.name && s.status === 'pending');
-            
-            if (myPendingSwaps.length === 0) {
-                inbox.innerHTML = `<p style="font-size: 13px; color: var(--text-muted); text-align: center;">No pending requests</p>`;
-            } else {
-                myPendingSwaps.forEach(s => {
-                    // Find slot details
-                    const slot = db.bookings.find(b => b.id === s.slotId);
-                    if(slot) {
-                        inbox.innerHTML += `
-                            <div class="swap-item">
-                                <strong>${s.from}</strong> wants to give you their break at <strong>${slot.timeStr}</strong> (${slot.duration} mins).
-                                <div class="swap-actions">
-                                    <button class="btn-sm btn-accept" onclick="handleSwap('${s.id}', 'accept')">Accept</button>
-                                    <button class="btn-sm btn-reject" onclick="handleSwap('${s.id}', 'reject')">Reject</button>
-                                </div>
-                            </div>
-                        `;
-                    }
-                });
-            }
+// ACTIVE BREAK
+function startBreak(brkId) {
+  var d = gd();
+  var tb = tdb(d);
+  var brk = null;
+  for (var i = 0; i < tb.length; i++) { if (tb[i].id === brkId) { brk = tb[i]; break; } }
+  if (!brk) return;
+  for (var i = 0; i < tb.length; i++) {
+    if (tb[i].agent === me.name && tb[i].status === 'active') { showToast('You already have an active break','err'); return; }
+  }
+  brk.status = 'active';
+  brk.startedAt = new Date().toISOString();
+  sv(d);
+  showToast('Break started! ' + brk.duration + ' min', 'ok');
+  pushNotif(me.name, 'Break started at ' + fmt12(brk.breakStart) + ' (' + brk.duration + ' min)', 'start');
+  renderAll(); activateBanner(brk);
+}
 
-            renderLiveAgents(db);
-        }
+function endBreak() {
+  var d = gd();
+  var tb = tdb(d);
+  var brk = null;
+  for (var i = 0; i < tb.length; i++) {
+    if (tb[i].agent === me.name && tb[i].status === 'active') { brk = tb[i]; break; }
+  }
+  if (!brk) return;
+  brk.status = 'completed';
+  brk.endedAt = new Date().toISOString();
+  brk.actualDuration = Math.round((new Date(brk.endedAt) - new Date(brk.startedAt)) / 60000);
+  sv(d);
+  clearInterval(activeTimerInt);
+  document.getElementById('abbanner').style.display = 'none';
+  showToast('Break ended – ' + brk.actualDuration + ' min actual', 'inf');
+  pushNotif(me.name, 'Break ended. Duration: ' + brk.actualDuration + ' min. Back to work!', 'end');
+  renderAll();
+}
 
-        function renderLiveAgents(db) {
-            const container = document.getElementById('live-agents-container');
-            container.innerHTML = '';
-            
-            const now = new Date();
-            const currentMins = now.getHours() * 60 + now.getMinutes();
+function checkActiveBreak() {
+  if (!me) return;
+  var d = gd();
+  var tb = tdb(d);
+  for (var i = 0; i < tb.length; i++) {
+    if (tb[i].agent === me.name && tb[i].status === 'active') { activateBanner(tb[i]); return; }
+  }
+}
 
-            const liveAgents = db.bookings.filter(b => currentMins >= b.startMins && currentMins < (b.startMins + b.duration));
+function activateBanner(brk) {
+  document.getElementById('abbanner').style.display = 'block';
+  document.getElementById('abtype').textContent = fmt12(brk.breakStart) + ' · ' + brk.duration + ' min';
+  clearInterval(activeTimerInt);
+  activeTimerInt = setInterval(function() {
+    if (!brk.startedAt) return;
+    var elapsed = Math.floor((Date.now() - new Date(brk.startedAt)) / 1000);
+    var em = Math.floor(elapsed/60), es = elapsed%60;
+    document.getElementById('abtimer').textContent = ('0'+em).slice(-2)+':'+('0'+es).slice(-2);
+    var pct = Math.min(elapsed / (brk.duration*60) * 100, 100);
+    var prog = document.getElementById('abprog');
+    prog.style.width = pct + '%';
+    prog.style.background = pct > 90 ? 'linear-gradient(90deg,var(--amber),var(--red))' : 'linear-gradient(90deg,var(--gold),var(--gold2))';
+    if (elapsed > brk.duration * 60 && elapsed % 60 === 0) showToast('Break time exceeded!','err');
+  }, 1000);
+}
 
-            if (liveAgents.length === 0) {
-                container.innerHTML = `<div class="agent-item empty">All agents are available</div>`;
-            } else {
-                liveAgents.forEach(b => {
-                    container.innerHTML += `
-                        <div class="agent-item">
-                            <span style="font-weight: 600;">${b.user}</span>
-                            <span class="badge badge-pending">Returns at ${minsToTime(b.startMins + b.duration)}</span>
-                        </div>
-                    `;
-                });
-            }
-        }
+function cancelBreak(brkId) {
+  if (!confirm('Cancel this break?')) return;
+  var d = gd();
+  var tb = tdb(d);
+  for (var i = 0; i < tb.length; i++) {
+    if (tb[i].id === brkId) { tb[i].status = 'cancelled'; break; }
+  }
+  sv(d); renderAll(); showToast('Break cancelled','inf');
+}
 
-        function populateDropdowns() {
-            // Get all names from login select to populate swap target select
-            const allOptions = Array.from(document.getElementById('login-name').options);
-            const swapSelect = document.getElementById('swap-agent-select');
-            swapSelect.innerHTML = '<option value="">-- Select Agent --</option>';
-            
-            allOptions.forEach(opt => {
-                if(opt.value && opt.value !== currentUser.name) {
-                    swapSelect.innerHTML += `<option value="${opt.value}">${opt.value}</option>`;
-                }
-            });
-        }
+// SWAP
+function openSwapRequest(breakId) {
+  var d = gd();
+  var brk = null;
+  var tb = tdb(d);
+  for (var i = 0; i < tb.length; i++) { if (tb[i].id === breakId) { brk = tb[i]; break; } }
+  if (!brk) return;
+  var others = d.agents.filter(function(a){ return a !== me.name; });
+  var html = '<div class="msheet"><h3>Request Swap</h3><p>Swap your ' + brk.duration + '-min break at ' + fmt12(brk.breakStart) + '</p><div class="aplist">';
+  for (var i = 0; i < others.length; i++) {
+    var a = others[i];
+    html += '<div class="apitem" onclick="sendSwap(\'' + breakId + '\',\'' + a.replace(/'/g,"\\'") + '\')"><div class="apav" style="background:' + ac(a) + '">' + ini(a) + '</div><div><div class="apname">' + a + '</div></div></div>';
+  }
+  html += '</div><button class="btn btn-outline" onclick="this.closest(\'.moverlay\').remove()">Cancel</button></div>';
+  var ov = document.createElement('div');
+  ov.className = 'moverlay';
+  ov.innerHTML = html;
+  ov.addEventListener('click', function(e){ if(e.target===ov) ov.remove(); });
+  document.body.appendChild(ov);
+}
 
-        // --- Clocks & Notifications ---
-        let lastNotifiedMins = -1;
-        function startClocks() {
-            setInterval(() => {
-                const now = new Date();
-                document.getElementById('realtime-clock').innerText = now.toLocaleTimeString('en-US', { hour12: false });
-                
-                // Every minute check
-                const currentMins = now.getHours() * 60 + now.getMinutes();
-                if (currentMins !== lastNotifiedMins) {
-                    lastNotifiedMins = currentMins;
-                    renderLiveAgents(getDB()); // Refresh live status
-                    checkNotifications(currentMins);
-                }
-            }, 1000);
-        }
+function sendSwap(breakId, toAgent) {
+  var d = gd();
+  if (!d.swaps) d.swaps = [];
+  d.swaps.push({ id:Date.now().toString(), from:me.name, to:toAgent, fromBreakId:breakId, date:today(), status:'pending', at:new Date().toISOString() });
+  sv(d);
+  document.querySelector('.moverlay') && document.querySelector('.moverlay').remove();
+  showToast('Swap request sent to ' + toAgent.split(' ')[0], 'ok');
+  pushNotif(toAgent, me.name + ' wants to swap a break with you – check Swap tab', 'swap');
+  renderAll();
+}
 
-        function checkNotifications(currentMins) {
-            if(!currentUser) return;
-            const db = getDB();
-            
-            db.bookings.forEach(b => {
-                if (b.user === currentUser.name) {
-                    if (b.startMins === currentMins) {
-                        showToast("🔔 Your break starts NOW!", "success");
-                    }
-                    if ((b.startMins + b.duration) === currentMins) {
-                        showToast("⏰ Break time is over. Please return to work.", "error");
-                    }
-                }
-            });
-        }
+function respondSwap(swapId, resp) {
+  var d = gd();
+  var sw = null;
+  for (var i = 0; i < d.swaps.length; i++) { if (d.swaps[i].id === swapId) { sw = d.swaps[i]; break; } }
+  if (!sw) return;
+  sw.status = resp;
+  if (resp === 'accepted') {
+    var tb = tdb(d);
+    var theirBrk = null;
+    for (var i = 0; i < tb.length; i++) { if (tb[i].id === sw.fromBreakId) { theirBrk = tb[i]; break; } }
+    var myBrk = null;
+    for (var i = 0; i < tb.length; i++) { if (tb[i].agent === me.name && tb[i].status === 'scheduled') { myBrk = tb[i]; break; } }
+    if (theirBrk && myBrk) {
+      var tmp = myBrk.breakStart; myBrk.breakStart = theirBrk.breakStart; theirBrk.breakStart = tmp;
+      var tmpd = myBrk.duration; myBrk.duration = theirBrk.duration; theirBrk.duration = tmpd;
+    }
+    pushNotif(sw.from, me.name + ' accepted your swap!', 'swap_ok');
+    showToast('Swap accepted', 'ok');
+  } else {
+    pushNotif(sw.from, me.name + ' declined your swap request', 'swap_no');
+    showToast('Swap declined', 'inf');
+  }
+  sv(d); renderAll();
+}
 
-    </script>
+// NOTIFS
+function pushNotif(agent, msg, type) {
+  var d = gd();
+  if (!d.notifs) d.notifs = {};
+  if (!d.notifs[agent]) d.notifs[agent] = [];
+  d.notifs[agent].unshift({ id:Date.now().toString(), msg:msg, type:type, time:new Date().toISOString(), read:false });
+  if (d.notifs[agent].length > 30) d.notifs[agent] = d.notifs[agent].slice(0,30);
+  sv(d);
+  if (me && agent === me.name) document.getElementById('ndot').style.display = 'block';
+}
+
+function toggleN() {
+  var p = document.getElementById('npanel');
+  var open = p.classList.toggle('open');
+  if (open) { markRead(); renderNotifs(); }
+}
+function markRead() {
+  if (!me) return;
+  var d = gd();
+  if (d.notifs && d.notifs[me.name]) d.notifs[me.name].forEach(function(n){ n.read=true; });
+  sv(d); document.getElementById('ndot').style.display = 'none';
+}
+function clearN() {
+  if (!me) return;
+  var d = gd();
+  if (d.notifs) d.notifs[me.name] = [];
+  sv(d); renderNotifs();
+}
+function renderNotifs() {
+  if (!me) return;
+  var d = gd();
+  var list = (d.notifs && d.notifs[me.name]) ? d.notifs[me.name] : [];
+  var unread = list.filter(function(n){ return !n.read; }).length;
+  document.getElementById('ndot').style.display = unread > 0 ? 'block' : 'none';
+  var el = document.getElementById('nlist');
+  if (!list.length) { el.innerHTML = '<div class="empty"><div class="ep">No notifications</div></div>'; return; }
+  var icons = { start:'&#9749;', end:'&#10003;', swap:'&#128260;', swap_ok:'&#10003;', swap_no:'&#10007;' };
+  var bgs = { start:'rgba(0,40,104,.06)', end:'var(--greenbg)', swap:'var(--amberbg)', swap_ok:'var(--greenbg)', swap_no:'var(--redbg)' };
+  var html = '';
+  for (var i = 0; i < list.length; i++) {
+    var n = list[i];
+    var ic = icons[n.type] || '&#128228;';
+    var bg = bgs[n.type] || 'var(--bg)';
+    var t = new Date(n.time).toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit',hour12:true});
+    html += '<div class="nitem' + (n.read?'':' unread') + '"><div class="nicon" style="background:' + bg + '">' + ic + '</div><div><div class="nmsg">' + n.msg + '</div><div class="ntime">' + t + '</div></div></div>';
+  }
+  el.innerHTML = html;
+}
+
+// RENDER
+function renderAll() {
+  if (!me) return;
+  var d = gd();
+  renderBalance(d);
+  renderNow(d);
+  renderSched(d);
+  renderSwapPage(d);
+  renderHistory(d);
+  renderAdmin(d);
+  renderNotifs();
+}
+
+function renderBalance(d) {
+  var daily = d.settings ? (d.settings.dailyMin||60) : 60;
+  var sched = schedMin(me.name, d);
+  var used = usedMin(me.name, d);
+  var rem = Math.max(daily - sched, 0);
+  var pct = Math.min(sched/daily*100,100);
+  document.getElementById('bcnum').textContent = rem;
+  document.getElementById('bcsub').textContent = used + ' min used · ' + (sched-used) + ' min upcoming';
+  document.getElementById('bcprog').style.width = pct + '%';
+  document.getElementById('bcprog').style.background = pct > 90 ? 'linear-gradient(90deg,var(--amber),var(--red))' : 'linear-gradient(90deg,var(--gold),var(--gold2))';
+  document.getElementById('bcused').textContent = sched + ' min scheduled';
+  document.getElementById('bctotal').textContent = daily + ' min total';
+  document.getElementById('bchip').textContent = rem + ' min left';
+}
+
+function renderNow(d) {
+  var el = document.getElementById('nowPanel');
+  var nowM = toMin(nowHHMM());
+  var tb = tdb(d);
+  var list = [];
+  for (var i = 0; i < tb.length; i++) {
+    var b = tb[i];
+    if (b.status === 'cancelled') continue;
+    var bS = toMin(b.breakStart);
+    if (bS <= nowM && bS + b.duration > nowM) list.push(b);
+  }
+  if (!list.length) { el.innerHTML = '<div class="empty" style="padding:16px"><div class="ep">No one on break right now &#10003;</div></div>'; return; }
+  var html = '';
+  for (var i = 0; i < list.length; i++) {
+    var b = list[i];
+    html += '<div class="agrow"><div class="agav" style="background:' + ac(b.agent) + '">' + ini(b.agent) + '</div><div><div class="agn">' + b.agent + '</div><div class="ags">' + fmt12(b.breakStart) + ' · ' + b.duration + ' min</div></div><div style="margin-left:auto"><span class="pill pg-amber"><span class="pdot"></span>On Break</span></div></div>';
+  }
+  el.innerHTML = html;
+}
+
+function renderSched(d) {
+  var tb = tdb(d);
+  var myb = [];
+  for (var i = 0; i < tb.length; i++) {
+    if (tb[i].agent === me.name && tb[i].status !== 'cancelled') myb.push(tb[i]);
+  }
+  myb.sort(function(a,b){ return toMin(a.breakStart)-toMin(b.breakStart); });
+  var el = document.getElementById('schedPanel');
+  var nowM = toMin(nowHHMM());
+  if (!myb.length) { el.innerHTML = '<div class="empty"><div class="ei">&#128197;</div><div class="ep">No breaks scheduled. Go to <strong>Book</strong>.</div></div>'; return; }
+  var html = '<div class="tline" style="margin-bottom:12px">';
+  for (var i = 0; i < myb.length; i++) {
+    var b = myb[i];
+    var bM = toMin(b.breakStart);
+    var isDone = b.status === 'completed';
+    var isActive = b.status === 'active';
+    var dotcls = isDone ? 'done' : isActive ? 'active' : '';
+    var actual = b.actualDuration ? ' · Actual: '+b.actualDuration+' min' : '';
+    var canStart = b.status === 'scheduled' && Math.abs(bM - nowM) <= 15;
+    var pilly = isDone ? '<span class="pill pg-green">&#10003; Done</span>' : isActive ? '<span class="pill pg-navy">&#8987; In Progress</span>' : '<span class="pill pg-gold">&#128197; Scheduled</span>';
+    html += '<div class="tlitem"><div class="tldot '+dotcls+'"></div><div class="tlcard"><div class="tltime">'+fmt12(b.breakStart)+'</div><div class="tltitle">'+b.duration+' min break'+actual+'</div><div class="tlactions">'+pilly;
+    if (canStart && !isDone && !isActive) html += '<button class="btn btn-navy bsm" onclick="startBreak(\''+b.id+'\')">Start Now</button>';
+    if (!isDone && !isActive) html += '<button style="background:none;border:none;color:var(--red);font-size:12px;font-weight:700;cursor:pointer;padding:4px 8px" onclick="cancelBreak(\''+b.id+'\')">Cancel</button>';
+    html += '</div></div></div>';
+  }
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function renderSwapPage(d) {
+  var today2 = today();
+  var swaps = d.swaps || [];
+
+  // Incoming
+  var inc = swaps.filter(function(s){ return s.to === me.name && s.status === 'pending' && s.date === today2; });
+  var inEl = document.getElementById('inswap');
+  if (!inc.length) {
+    inEl.innerHTML = '<div class="empty"><div class="ei">&#128260;</div><div class="ep">No pending requests</div></div>';
+  } else {
+    var html = '';
+    for (var i = 0; i < inc.length; i++) {
+      var s = inc[i];
+      var fb = null;
+      var tb = tdb(d);
+      for (var j = 0; j < tb.length; j++) { if (tb[j].id === s.fromBreakId) { fb = tb[j]; break; } }
+      html += '<div class="swapcard"><div class="swapfrom">From: <strong>'+s.from+'</strong></div><div class="swaptitle">Swap Request</div><div class="swapmeta">'+(fb ? fmt12(fb.breakStart)+' · '+fb.duration+' min' : 'Break details unavailable')+'</div><div class="swapbtns"><button class="btn btn-green bsm" onclick="respondSwap(\''+s.id+'\',\'accepted\')">&#10003; Accept</button><button class="btn btn-red bsm" onclick="respondSwap(\''+s.id+'\',\'rejected\')">&#10007; Decline</button></div></div>';
+    }
+    inEl.innerHTML = html;
+  }
+
+  // Badge
+  var badge = document.getElementById('swbadge');
+  if (inc.length > 0) { badge.textContent = inc.length; badge.style.display = 'block'; }
+  else badge.style.display = 'none';
+
+  // My breaks
+  var myb = [];
+  var tb2 = tdb(d);
+  for (var i = 0; i < tb2.length; i++) {
+    if (tb2[i].agent === me.name && tb2[i].status === 'scheduled') myb.push(tb2[i]);
+  }
+  var myEl = document.getElementById('myswap');
+  if (!myb.length) {
+    myEl.innerHTML = '<div class="empty"><div class="ei">&#9749;</div><div class="ep">No scheduled breaks to swap</div></div>';
+  } else {
+    var html2 = '';
+    for (var i = 0; i < myb.length; i++) {
+      var b = myb[i];
+      var pending = swaps.filter(function(s){ return s.fromBreakId === b.id && s.status === 'pending'; }).length > 0;
+      html2 += '<div class="card" style="margin-bottom:9px"><div class="ch"><div class="ct">&#9749; '+fmt12(b.breakStart)+' · '+b.duration+' min</div>'+(pending?'<span class="pill pg-amber">Pending</span>':'')+'</div><div class="cb">'+(pending?'<p style="font-size:12px;color:var(--t2)">Request sent – awaiting response</p>':'<button class="btn btn-outline" onclick="openSwapRequest(\''+b.id+'\')" style="font-size:13px;padding:11px">&#128260; Request Swap</button>')+'</div></div>';
+    }
+    myEl.innerHTML = html2;
+  }
+}
+
+function renderHistory(d) {
+  var myb = [];
+  var tb = tdb(d);
+  for (var i = 0; i < tb.length; i++) {
+    if (tb[i].agent === me.name) myb.push(tb[i]);
+  }
+  myb.sort(function(a,b){ return toMin(b.breakStart)-toMin(a.breakStart); });
+  var el = document.getElementById('histpanel');
+  if (!myb.length) { el.innerHTML = '<div class="empty" style="padding:20px"><div class="ep">No breaks today</div></div>'; return; }
+  var statmap = {completed:'pg-green',active:'pg-navy',scheduled:'pg-gold',cancelled:'pg-red'};
+  var iconmap = {completed:'&#10003;',active:'&#8987;',scheduled:'&#128197;',cancelled:'&#10007;'};
+  var bgmap = {completed:'var(--greenbg)',active:'rgba(0,40,104,.06)',scheduled:'var(--goldbg)',cancelled:'var(--redbg)'};
+  var html = '';
+  for (var i = 0; i < myb.length; i++) {
+    var b = myb[i];
+    var dur = b.actualDuration || b.duration;
+    html += '<div class="histrow"><div class="hicon" style="background:'+(bgmap[b.status]||'var(--bg)')+'">'+iconmap[b.status]+'</div><div class="hinfo"><div class="htitle">'+fmt12(b.breakStart)+'</div><div class="hmeta">'+b.duration+' min'+(b.actualDuration?' · Actual: '+b.actualDuration+' min':'')+'</div></div><div class="hr"><div class="hdur">'+dur+'m</div><span class="pill '+(statmap[b.status]||'pg-gold')+'" style="font-size:10px;margin-top:4px;display:inline-flex">'+b.status+'</span></div></div>';
+  }
+  el.innerHTML = html;
+
+  if (me.role !== 'agent') {
+    var all = tdb(d).filter(function(b){ return b.status !== 'cancelled'; });
+    all.sort(function(a,b){ return toMin(b.breakStart)-toMin(a.breakStart); });
+    var allEl = document.getElementById('allpanel');
+    if (!all.length) { allEl.innerHTML = '<div class="empty" style="padding:16px"><div class="ep">No breaks today</div></div>'; return; }
+    var html2 = '';
+    for (var i = 0; i < all.length; i++) {
+      var b = all[i];
+      html2 += '<div class="histrow"><div class="hicon" style="background:'+(bgmap[b.status]||'var(--bg)')+'">'+iconmap[b.status]+'</div><div class="hinfo"><div class="htitle">'+b.agent+'</div><div class="hmeta">'+fmt12(b.breakStart)+' · '+b.duration+' min</div></div><div class="hr"><div class="hdur" style="font-size:13px">'+(b.actualDuration||b.duration)+'m</div><span class="pill '+(statmap[b.status]||'pg-gold')+'" style="font-size:10px;margin-top:4px;display:inline-flex">'+b.status+'</span></div></div>';
+    }
+    allEl.innerHTML = html2;
+  }
+}
+
+function renderAdmin(d) {
+  var el = document.getElementById('aglist');
+  if (!el) return;
+  document.getElementById('smax').value = d.settings ? (d.settings.dailyMin||60) : 60;
+  document.getElementById('scon').value = d.settings ? (d.settings.maxCon||2) : 2;
+  document.getElementById('smaxb').value = d.settings ? (d.settings.maxBreak||30) : 30;
+  var tb = tdb(d);
+  var html = '';
+  for (var i = 0; i < d.agents.length; i++) {
+    var a = d.agents[i];
+    var cnt = 0;
+    for (var j = 0; j < tb.length; j++) { if (tb[j].agent === a && tb[j].status !== 'cancelled') cnt++; }
+    html += '<div class="adrow"><div class="agav" style="background:'+ac(a)+';width:30px;height:30px;border-radius:7px;font-size:10px;font-weight:800">'+ini(a)+'</div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600">'+a+'</div><div style="font-size:11px;color:var(--t2)">'+cnt+' break'+(cnt!==1?'s':'')+' today</div></div><button style="background:none;border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:11px;color:var(--red);cursor:pointer;font-family:inherit" onclick="removeAg(\''+a.replace(/'/g,"\\'")+'\')">Remove</button></div>';
+  }
+  el.innerHTML = html || '<div class="empty" style="padding:16px"><div class="ep">No agents</div></div>';
+}
+
+function addAg() {
+  var name = document.getElementById('nagent').value.trim();
+  if (!name) return;
+  var d = gd();
+  if (d.agents.indexOf(name) >= 0) { showToast('Already exists','err'); return; }
+  d.agents.push(name); sv(d);
+  document.getElementById('nagent').value = '';
+  renderAll(); initLogin(); showToast(name+' added','ok');
+}
+function removeAg(name) {
+  if (!confirm('Remove '+name+'?')) return;
+  var d = gd();
+  d.agents = d.agents.filter(function(a){ return a !== name; });
+  sv(d); renderAll(); initLogin(); showToast('Removed','inf');
+}
+function saveSett() {
+  var d = gd();
+  d.settings = { dailyMin:parseInt(document.getElementById('smax').value)||60, maxCon:parseInt(document.getElementById('scon').value)||2, maxBreak:parseInt(document.getElementById('smaxb').value)||30 };
+  sv(d); renderAll(); showToast('Settings saved','ok');
+}
+function clearDay() {
+  if (!confirm("Clear today's breaks?")) return;
+  var d = gd(); d.breaks[today()] = []; sv(d); renderAll(); showToast('Cleared','inf');
+}
+function clearAll() {
+  if (!confirm('Clear ALL data?')) return;
+  localStorage.removeItem(SK); renderAll(); initLogin(); showToast('All data cleared','inf');
+}
+
+// NAV
+function gp(p) {
+  document.querySelectorAll('.pg').forEach(function(x){ x.classList.remove('on'); });
+  document.querySelectorAll('.nb').forEach(function(x){ x.classList.remove('on'); });
+  document.getElementById('pg-'+p).classList.add('on');
+  document.getElementById('nav-'+p).classList.add('on');
+  if (p === 'book') buildSlotGrid();
+  document.getElementById('npanel').classList.remove('open');
+  window.scrollTo(0,0);
+}
+
+// TOAST
+function showToast(msg, type) {
+  var el = document.getElementById('toast');
+  var ic = {ok:'✅',err:'❌',inf:'ℹ️'};
+  el.innerHTML = (ic[type]||'') + ' ' + msg;
+  el.className = 'toast show ' + (type||'');
+  clearTimeout(toastTO);
+  toastTO = setTimeout(function(){ el.classList.remove('show'); }, 3500);
+}
+
+document.addEventListener('click', function(e) {
+  var p = document.getElementById('npanel');
+  var bell = document.querySelector('.bellbtn');
+  if (p && p.classList.contains('open') && !p.contains(e.target) && bell && !bell.contains(e.target)) {
+    p.classList.remove('open');
+  }
+});
+
+initLogin();
+</script>
 </body>
 </html>
